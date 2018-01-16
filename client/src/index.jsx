@@ -16,6 +16,7 @@ import Login from './components/Login.jsx';
 import SignUp from './components/SignUp.jsx';
 import Profile from './components/Profile.jsx';
 import Navbar from './components/Navbar.jsx';
+import Chat from './components/Chat.jsx';
 // ---------- Helper ---------- //
 import feedManipulation from './feedManipulation.js'
 
@@ -211,6 +212,10 @@ class App extends React.Component {
       <MuiThemeProvider muiTheme={muiTheme}>
         <BrowserRouter>
           <Switch>
+          <Route 
+              exact path="/chat"  
+              render={routeProps => <Chat {...routeProps} userData={this.state.userInfo}/>}
+            />
             <Route 
               exact path="/signup" 
               render={routeProps => <SignUp {...routeProps} logUserIn={this.logUserIn.bind(this)} />} 
