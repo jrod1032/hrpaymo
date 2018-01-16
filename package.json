@@ -1,10 +1,10 @@
 {
   "name": "Paymo",
   "version": "1.0.0",
-  "description": "",
+  "description": "Pay your friends!",
   "main": "index.js",
-  "author": "",
-  "license": "",
+  "author": "AirHnR",
+  "license": "MIT",
   "engines": {
     "node": ">=8.7.0",
     "npm": ">=5.4.2"

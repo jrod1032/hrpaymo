@@ -1,3 +1,4 @@
+/*   psql -d postgres -a -f ./schema.sql    */
 \connect template1;
 DROP DATABASE IF EXISTS paymo;
 CREATE DATABASE paymo;
