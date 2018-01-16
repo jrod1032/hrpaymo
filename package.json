@@ -5,6 +5,7 @@
   "main": "index.js",
   "author": "AirHnR",
   "license": "MIT",
+  "repository": "https://github.com/AirHnR/hrpaymo",
   "engines": {
     "node": ">=8.7.0",
     "npm": ">=5.4.2"
@@ -14,6 +15,7 @@
     "react-dev": "webpack -d --watch",
     "start-dev": "nodemon server/index.js",
     "start": "node server/index.js",
+    "create-db": "psql -d postgres -a -f database/schema.sql",
     "test": "mocha test/index.js"
   },
   "dependencies": {
@@ -25,6 +27,7 @@
     "babel-preset-react": "^6.23.0",
     "babel-register": "^6.7.2",
     "babel-runtime": "^6.26.0",
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.17.2",
     "dotenv": "^4.0.0",
     "express": "^4.15.0",
@@ -38,6 +41,7 @@
     "react-form-validator-core": "^0.3.0",
     "react-material-ui-form-validator": "^1.0.5",
     "react-router-dom": "^4.2.2",
+    "twilio": "^3.11.0",
     "underscore": "^1.8.3",
     "webpack": "^2.2.1"
   },
