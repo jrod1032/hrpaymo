@@ -5,6 +5,7 @@ const profile = require('../database/profile.js');
 const payment = require('../database/pay.js');
 const usernames = require('../database/usernames.js');
 const messages = require('../database/messages');
+const userAnalytics = require('../database/userAnalytics.js')
 
 module.exports = {
   signup: signup,
@@ -23,4 +24,6 @@ module.exports = {
   getUserPhoneNumber: profile.getUserPhoneNumber,
   updatePhoneNumber: profile.updatePhoneNumber,
   verifyUserPhone: profile.verifyUserPhone
+  getAllMessagesBetweenTwoUsers: messages.getAllMessagesBetweenTwoUsers
+  userAnalytics: userAnalytics
 }
