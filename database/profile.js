@@ -5,7 +5,7 @@ module.exports = {
   getUserInfo: (userId, callback) => {
     pg.table('users')
       .where({id: userId})
-      .select('id', 'username', 'first_name', 'last_name', 'created_at', 'avatar_url')
+      .select('id', 'username', 'first_name', 'last_name', 'created_at', 'avatar_url', 'verified')
       .then((result) => {
         callback(null, result);
       })

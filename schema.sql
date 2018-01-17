@@ -1,3 +1,4 @@
+/*   psql -d postgres -a -f ./schema.sql    */
 \connect template1;
 DROP DATABASE IF EXISTS paymo;
 CREATE DATABASE paymo;
@@ -8,6 +9,8 @@ CREATE TABLE USERS (
   username varchar(20) UNIQUE NOT NULL,
   first_name varchar(20) NOT NULL,
   last_name varchar(20) NOT NULL,
+  verified BOOLEAN DEFAULT false,
+  authy_id varchar(64),
   updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
   created_at timestamp DEFAULT CURRENT_TIMESTAMP,
   phone varchar(11) UNIQUE NOT NULL,

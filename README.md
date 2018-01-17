@@ -4,10 +4,10 @@
 
 ## Team
 
-  - teamMember
-  - teamMember
-  - teamMember
-  - teamMember
+  - Santiago Iraola
+  - Cherry Xu
+  - Cody Schindler
+  - Jarrod Powell
 
 ## Table of Contents
 
