@@ -39,6 +39,12 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if(userData) {
+      this.setState({
+        userInfo: userData
+      });
+    }
   }
 
   loadUserData(userId) {
@@ -133,6 +139,7 @@ class App extends React.Component {
         this.setState({
           userInfo: response.data
         });
+        localStorage.setItem('user', JSON.stringify(response.data));
       })
       .catch((err) =>{
         console.error(err);
@@ -214,7 +221,7 @@ class App extends React.Component {
           <Switch>
           <Route 
               exact path="/chat"  
-              render={routeProps => <Chat {...routeProps} userData={this.state.userInfo}/>}
+              render={routeProps => <Chat {...routeProps} userInfo={this.state.userInfo}/>}
             />
             <Route 
               exact path="/signup" 

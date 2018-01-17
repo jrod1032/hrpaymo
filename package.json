@@ -41,7 +41,13 @@
     "react-form-validator-core": "^0.3.0",
     "react-material-ui-form-validator": "^1.0.5",
     "react-router-dom": "^4.2.2",
+<<<<<<< HEAD
     "twilio": "^3.11.0",
+||||||| merged common ancestors
+=======
+    "socket.io": "^2.0.4",
+    "socket.io-client": "^2.0.4",
+>>>>>>> chat functionality with socket.io [WIP]
     "underscore": "^1.8.3",
     "webpack": "^2.2.1"
   },

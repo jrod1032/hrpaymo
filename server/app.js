@@ -1,10 +1,13 @@
 const express = require('express');
 const app = express();
+let http = require('http').Server(app);
+let io = require('socket.io')(http);
 const bodyParser = require('body-parser');
 const db = require('../database/queries.js');
 const helpers = require('./helpers.js');
 var path = require('path');
 const _ = require('underscore');
+const setSocketListeners = require('./sockets');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -267,5 +270,7 @@ app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '..' , './client/dist/index.html'));
 });
 
-module.exports = app;
+setSocketListeners(io);
+
+module.exports = http;
 
