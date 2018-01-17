@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/../client/dist'));
 
-app.use('./sms', sms);
+app.use('/sms', sms);
 
 app.post('/login', (req, res) => {
   var {username, password} = req.body;

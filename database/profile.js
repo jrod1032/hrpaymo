@@ -96,5 +96,12 @@ module.exports = {
       .where({username: username})
       .select('id', 'username', 'first_name', 'last_name', 'created_at', 'avatar_url')
       .limit(1)
-  }
+  },
+
+  getUserPhoneNumber: (userId) => {
+    return pg.table('users')
+      .where({ id: userId })
+      .select('phone')
+      .then(row => row[0].phone)
+  } 
 };

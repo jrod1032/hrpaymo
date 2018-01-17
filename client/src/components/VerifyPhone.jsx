@@ -1,8 +1,3 @@
-// import axios from 'axios';
-// import { Link } from 'react-router-dom';
-// import { ValidatorForm } from 'react-form-validator-core';
-// import { TextValidator } from 'react-material-ui-form-validator';
-
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -17,20 +12,46 @@ export default class VerifyPhone extends React.Component {
     super(props);
     this.state = {
       formData: {
-        phone: '1234567890'
+        phone: ''
       },
       open: false,
       validNumber: false,
-      reminderOpen: !this.props.verifiedUser
+      reminderOpen: !this.props.userInfo.verified
     }
   }
 
+
   componentDidMount() {
-    this.testNumber();
+    this.getUserPhoneNumber(this.props.userInfo.userId);
+  }
+
+  getUserPhoneNumber(userId) { //this needs to have some sort of authentication
+    console.log(userId)
+    const { formData } = this.state;
+    fetch(`/sms/userphone/${userId}`)
+      .then(res => res.json())
+      .then(json => {
+        console.log(json);
+        formData.phone = json.phone;
+        this.setState({ formData });
+        this.testNumber();
+      }).catch(err  => {
+        console.log(err);
+      });
+  }
+
+  submitForVerification() { //this needs to have some sort of authentication
+    return fetch(`/sms/verify/?p=${this.state.formData.phone}&uid=${this.props.userInfo.userId}`)
+      .then(res => res.json())
+      .then(json => {
+        console.log(json);
+      }).catch(err => {
+        console.log(err);
+      });
   }
 
   notNow() {
-    this.setState({reminderOpen: false});
+    this.setState({ reminderOpen: false });
     this.handleClose();
   }
 
@@ -58,10 +79,6 @@ export default class VerifyPhone extends React.Component {
     this.setState({ open: false });
   };
 
-  handleSubmit() {
-    console.log('submitting!');
-  }
-
   render() {
     const { formData } = this.state;
     const actions = [
@@ -75,7 +92,7 @@ export default class VerifyPhone extends React.Component {
         primary={true}
         keyboardFocused={true}
         disabled={!this.state.validNumber}
-        onClick={this.handleSubmit.bind(this)}
+        onClick={this.submitForVerification.bind(this)}
       />,
       <FlatButton
         label="Not Now"
@@ -91,7 +108,7 @@ export default class VerifyPhone extends React.Component {
           action="verify"
           autoHideDuration={3000}
           onActionClick={this.handleOpen.bind(this)}
-          onRequestClose={()=>{console.log('requesting close', this)}}
+          onRequestClose={()=>{}}
         />
         <Dialog
           title="Enter your phone number"

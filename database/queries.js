@@ -19,6 +19,6 @@ module.exports = {
   insertRandomUsersInDB: profile.insertRandomUsersInDB,
   storeMessage: messages.storeMessage,
   getTwoUsersByName: messages.getTwoUsersByName,
-  getAllMessagesBetweenTwoUsers: messages.getAllMessagesBetweenTwoUsers
+  getAllMessagesBetweenTwoUsers: messages.getAllMessagesBetweenTwoUsers,
+  getUserPhoneNumber: profile.getUserPhoneNumber
 }
-

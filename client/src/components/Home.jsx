@@ -55,7 +55,7 @@ class Home extends React.Component {
               balance={this.props.balance}
               userInfo={this.props.userInfo}
             />
-            <VerifyPhone verifiedUser={false} />
+            <VerifyPhone userInfo={this.props.userInfo}/>
           </div>
         </div>
       </div>
