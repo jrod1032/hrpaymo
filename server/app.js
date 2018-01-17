@@ -266,6 +266,13 @@ app.get('/feed/relational', (req, res) => {
     })
 });
 
+app.get('/messages', (req, res) => {
+  let sender = req.query.senderId;
+  let receiver = req.query.receiverId;
+
+  res.json({sender: sender, receiver: receiver});
+});
+
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '..' , './client/dist/index.html'));
 });
