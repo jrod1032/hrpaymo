@@ -5,6 +5,63 @@ import {ChatMessages, ChatBox} from './ChatMessages.jsx';
 import openSocket from 'socket.io-client';
 const socket = openSocket('http://localhost:3000');
 
+const fakeData = [
+  {
+    friend: {
+      username: 'cody', 
+      imageUrl: 'image'
+    },
+    messages: [
+      {
+        sender: 'cody',
+        reciever: 'newguy',
+        message: 'Hello newguy'
+      },
+      {
+        sender: 'newguy',
+        reciever: 'cody',
+        message: 'Hello cody'
+      }
+    ]
+  },
+  {
+    friend: {
+      username: 'cherry', 
+      imageUrl: 'image'
+    },
+    messages: [
+      {
+        sender: 'cherry',
+        reciever: 'blam92',
+        message: 'Hello blam92 I am cherry'
+      },
+      {
+        sender: 'blam92',
+        reciever: 'cherry',
+        message: 'oh hi!'
+      }
+    ]
+  },
+  {
+    friend: {
+      username: 'jarrod', 
+      imageUrl: 'image'
+    },
+    messages: [
+      {
+        sender: 'blam92',
+        reciever: 'jarrod',
+        message: 'Hello jarrod! u there?'
+      },
+      {
+        sender: 'jarrod',
+        reciever: 'blam92',
+        message: 'Hello jarrod! u there?'
+      }
+    ]
+  }
+] 
+
 const styles = {
   container: {
     display: 'grid',
@@ -41,12 +98,13 @@ class Chat extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      usernames: [],
-      chats: [{message: 'Hi there', imageUrl: 'randomImg'}, 
-      {message: 'Hi there', imageUrl: 'randomImg'}, {message: 'Hi there', imageUrl: 'randomImg'}],
-      onlineUsers: []
+      users: [],
+      chats: fakeData,
+      onlineUsers: [],
+      currentChatData: fakeData[0]
     }
     this.sendMessage = this.sendMessage.bind(this);
+    this.openChatWithFriend = this.openChatWithFriend.bind(this);
   }
   componentDidMount() {
     this.getUsers();
@@ -71,8 +129,9 @@ class Chat extends Component {
   getUsers() {
     axios('/usernames', { params: { userId: this.props.userInfo.userId }})
     .then(response => {
+      console.log('fake data!', fakeData[0]);
       this.setState({
-        usernames: response.data.usernames
+        users: response.data.usernames
       });
     })
     .catch(err => {
@@ -82,9 +141,6 @@ class Chat extends Component {
 
   sendMessage(message) {
     socket.emit('chat', {message: message, imageUrl: ''});
-    // this.setState({
-    //   chats: this.state.chats.concat([{message: message, imageUrl: ''}])
-    // });
   }
   updateChats(messages) {
     this.setState({
@@ -92,15 +148,28 @@ class Chat extends Component {
     })
   }
 
+  openChatWithFriend(friendUsername) {
+    let currentChats = this.state.chats.filter((chat) => {
+      return chat.friend.username === friendUsername;
+    });
+    console.log(currentChats);
+    this.setState({
+      currentChatData: currentChats[0]
+    });
+  }
+
   render() {
+    console.log(this.state.currentChatData);
     return (
       <div style={styles.container}>
         <div style={styles.friendList} className="friend-list">
-          <FriendList friends={this.state.onlineUsers}/>
+          <FriendList friends={this.state.onlineUsers} 
+          users={this.state.users} openChat={this.openChatWithFriend}/>
         </div>
         <div style={styles.chat} className="chat">
           <div style={styles.messageBox} className="messagebox">
-            <ChatMessages chats={this.state.chats}/>
+            <ChatMessages chats={this.state.currentChatData} 
+            userAvatar={this.props.userInfo.avatarUrl} username={this.props.userInfo.username}/>
           </div>
           <div style={styles.chatBox} className="chatbox">
             <ChatBox sendMessage={this.sendMessage}/>

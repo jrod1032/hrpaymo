@@ -11,12 +11,14 @@ const FriendItem = (props) => (
   primaryText={props.username || 'Random User'}
   leftAvatar={<Avatar src={props.imageUrl || ''} />}
   rightIcon={<CommunicationChatBubble />}
+  value={props.username}
+  onClick={() => props.openChat(props.username)}
   />
 );
 
 const FriendList = (props) => {
-  const friendItems = props.friends.map((u, index) => {
-    return <FriendItem username={u.userData.username} key={index}/>
+  const friendItems = props.users.map((username, index) => {
+    return <FriendItem username={username} key={index} openChat={props.openChat}/>
   });
   return (
   <Card>

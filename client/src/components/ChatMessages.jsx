@@ -38,8 +38,9 @@ const Message = (props) => {
 }
 
 const ChatMessages = (props) => {
-  const messages = props.chats.map((val, index) => {
-    return <Message message={val.message} imageUrl={val.imageUrl} key={index}/>
+  const messages = props.chats.messages.map((val, index) => {
+    let image = val.sender === props.username ? props.userAvatar : val.imageUrl;
+    return <Message message={val.message} imageUrl={image} key={index}/>
   });
 
   return (
