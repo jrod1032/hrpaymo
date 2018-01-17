@@ -3,6 +3,7 @@ const lib = require('../lib');
 const express = require('express');
 const router = express.Router();
 
+<<<<<<< HEAD
 const getPhoneNumberParts = (phoneNumber) => {
   if (phoneNumber.length === 10) {
     return {phone_number: phoneNumber, country_code: '1'}
@@ -63,6 +64,25 @@ const request = (req, res) => {
       console.log('error creating phone reg request', err);
       res.status(500).json({ success: false });
     })
+=======
+const authenticate = (req, res) => {
+  res.status(200).end()
+}
+
+const submitForVerification = (req, res) => {
+  console.log('verifying phone number', req.params.phoneNumber)
+  lib.twillio.verifyNumber(req.params.phoneNumber)
+    .then(response => {
+      console.log('phone number verified')
+      res.status(200).json({
+        verified: response
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).end();
+    });
+>>>>>>> added route for looking up user phone number on modal load
 };
 
 const getUserPhone = (req, res) => {
@@ -78,8 +98,13 @@ const getUserPhone = (req, res) => {
     });
 };
 
+<<<<<<< HEAD
 router.post('/verification/verify', verify);
 router.get('/verification/start', request);
+=======
+router.get('/verify/:number', submitForVerification);
+router.get('/authenticate/:number', authenticate);
+>>>>>>> added route for looking up user phone number on modal load
 router.get('/userphone/:userId', getUserPhone);
 
 module.exports = router;
