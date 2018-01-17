@@ -15,7 +15,7 @@
     "react-dev": "webpack -d --watch",
     "start-dev": "nodemon server/index.js",
     "start": "node server/index.js",
-    "create-db": "psql -d postgres -a -f database/schema.sql",
+    "create-db": "psql -d postgres -a -f schema.sql",
     "test": "mocha test/index.js"
   },
   "dependencies": {

@@ -3,6 +3,7 @@ import Navbar from './Navbar.jsx';
 import Payment from './Payment.jsx';
 import FeedContainer from './FeedContainer.jsx';
 import MiniProfile from './MiniProfile.jsx';
+import VerifyPhone from './VerifyPhone.jsx';
 
 class Home extends React.Component {
   constructor (props) {
@@ -52,7 +53,9 @@ class Home extends React.Component {
           <div className="home-rightColumn">
             <MiniProfile 
               balance={this.props.balance}
-              userInfo={this.props.userInfo}/>
+              userInfo={this.props.userInfo}
+            />
+            <VerifyPhone verifiedUser={false} />
           </div>
         </div>
       </div>
