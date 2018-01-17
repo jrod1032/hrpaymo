@@ -20,7 +20,6 @@ export default class VerifyPhone extends React.Component {
     }
   }
 
-
   componentDidMount() {
     this.getUserPhoneNumber(this.props.userInfo.userId);
   }
@@ -41,7 +40,7 @@ export default class VerifyPhone extends React.Component {
   }
 
   submitForVerification() { //this needs to have some sort of authentication
-    return fetch(`/sms/verify/?p=${this.state.formData.phone}&uid=${this.props.userInfo.userId}`)
+    return fetch(`/sms/verify?p=${this.state.formData.phone}&uid=${this.props.userInfo.userId}`)
       .then(res => res.json())
       .then(json => {
         console.log(json);

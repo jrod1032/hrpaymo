@@ -103,5 +103,48 @@ module.exports = {
       .where({ id: userId })
       .select('phone')
       .then(row => row[0].phone)
-  } 
+  },
+
+  updatePhoneNumber: (phoneNumber, userId) => {
+    console.log(phoneNumber, userId)
+    return pg.table('users')
+      .where('id', userId)
+      .returning(['phone', 'id', 'verified', 'authy_id'])
+      .update({
+        phone: phoneNumber
+      })
+  }
 };
+
+// return pg.transaction(userInsert => {
+//   return pg.table('users')
+// .transacting(userInsert)
+//   .returning('id')
+//   .insert({
+//     username: signupData.username,
+//     first_name: signupData.firstName,
+//     last_name: signupData.lastName,
+//     // TODO: hash password upon insertion
+//     password: signupData.password,
+//     phone: signupData.phone,
+//     email: signupData.email,
+//     avatar_url: signupData.avatarUrl ? signupData.avatarUrl : null
+//   })
+//   .then(id => {
+//     userId = id[0];
+//     return userId;
+//   })
+//   .then(id => {
+//     return pg.table('balance')
+//       .transacting(userInsert)
+//       .insert({
+//         user_id: id,
+//         amount: startingAmount
+//       })
+//   })
+//   .then(userInsert.commit)
+//   })
+//   .then(() => {
+//   return userId;
+// })
+// }

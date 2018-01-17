@@ -20,5 +20,6 @@ module.exports = {
   storeMessage: messages.storeMessage,
   getTwoUsersByName: messages.getTwoUsersByName,
   getAllMessagesBetweenTwoUsers: messages.getAllMessagesBetweenTwoUsers,
-  getUserPhoneNumber: profile.getUserPhoneNumber
+  getUserPhoneNumber: profile.getUserPhoneNumber,
+  updatePhoneNumber: profile.updatePhoneNumber
 }

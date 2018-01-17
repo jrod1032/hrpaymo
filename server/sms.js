@@ -8,18 +8,20 @@ const authenticate = (req, res) => {
 }
 
 const submitForVerification = (req, res) => {
-  console.log('verifying phone number', req.params.phoneNumber)
-  lib.twillio.verifyNumber(req.params.phoneNumber)
-    .then(response => {
-      console.log('phone number verified')
-      res.status(200).json({
-        verified: response
-      });
-    })
-    .catch(err => {
-      console.log(err);
+  console.log('verifying phone number', req.query.p, req.query.uid)
+  db.updatePhoneNumber(req.query.p, req.query.uid)
+  .then(response => {console.log(response)}).catch(err=>console.log(err))
+  // lib.twillio.verifyNumber(req.params.p)
+  //   .then(response => {
+    //   console.log('phone number verified', response)
+    //   res.status(200).json({
+    //     verified: response
+    //   });
+    // })
+    // .catch(err => {
+    //   console.log(err);
       res.status(500).end();
-    });
+    // });
 };
 
 const getUserPhone = (req, res) => {
@@ -35,7 +37,7 @@ const getUserPhone = (req, res) => {
     });
 };
 
-router.get('/verify/:number', submitForVerification);
+router.get('/verify', submitForVerification);
 router.get('/authenticate/:number', authenticate);
 router.get('/userphone/:userId', getUserPhone);
 
