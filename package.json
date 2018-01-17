@@ -12,7 +12,7 @@
   },
   "scripts": {
     "heroku-postbuild": "webpack -p --config ./webpack.config.js",
-    "heroku-rebuild-db": "heroku pg:reset postgresql-tapered-30799 --app paymohnr --confirm paymohnr && psql postgres://atdwgvjaxdrygk:f668459b33ef454677556334cc179905902763b23503ad1bab8c2a85fbb4abc0@ec2-54-83-59-144.compute-1.amazonaws.com:5432/dd8gqeqmdklrbs -f schema.sql"
+    "heroku-rebuild-db": "heroku pg:reset postgresql-tapered-30799 --app paymohnr --confirm paymohnr && psql postgres://atdwgvjaxdrygk:f668459b33ef454677556334cc179905902763b23503ad1bab8c2a85fbb4abc0@ec2-54-83-59-144.compute-1.amazonaws.com:5432/dd8gqeqmdklrbs -f schema.sql",
     "react-dev": "webpack -d --watch",
     "start-dev": "nodemon server/index.js",
     "start": "node server/index.js",
@@ -20,6 +20,8 @@
     "test": "mocha test/index.js"
   },
   "dependencies": {
+    "authy": "^1.3.0",
+    "authy-client": "^1.1.0",
     "axios": "^0.17.1",
     "babel-cli": "^6.7.5",
     "babel-core": "^6.23.1",
