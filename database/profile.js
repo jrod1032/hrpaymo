@@ -1,6 +1,70 @@
 const pg = require('./index.js').pg;
 
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+randomEmail = () => {
+  let letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'];
+  let email = '';
+  for(var i = 0; i < 6; i++) {
+    email += letters[getRandomInt(0, letters.length)];
+  }
+  email += '@';
+  for(var i = 0; i < 6; i++) {
+    email += letters[getRandomInt(0, letters.length)];
+  }
+  email += '.com';
+  return email;
+}
+
+randomPhoneNumber = () => {
+  let numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  let phone = '';
+  for(var i = 0; i < 11; i++) {
+    phone += numbers[getRandomInt(0, numbers.length)];
+  }
+  return phone;
+}
+
+createRandomUser = () => {
+  let names = ['John', 'Mike', 'Cody', 'Jarrod', 'Santiago', 'Aaron', 'Ginger', 'Larry', 'Albert'];
+  let lastNames = ['Adamas', 'Xu', 'Iraola', 'Schnidler', 'Powell', 'Gimenez', 'Catania'];
+  let phoneNumber = randomPhoneNumber();
+  let password = '11111111';
+  let email = 'sass@sass.com';
+  let avatar_url = ['https://static.pexels.com/photos/20787/pexels-photo.jpg', 'http://r.ddmcdn.com/s_f/o_1/cx_0/cy_0/cw_300/ch_300/w_300/APL/uploads/2014/10/kitten-cuteness300.jpg',
+    'https://www.nationalgeographic.com/content/dam/animals/thumbs/rights-exempt/mammals/d/domestic-dog_thumb.jpg',
+    'https://i.ytimg.com/vi/SfLV8hD7zX4/maxresdefault.jpg'
+  ];
+  let user = {}
+  user.username = names[getRandomInt(0, names.length)];
+  user.first_name = user.username;
+  user.last_name = lastNames[getRandomInt(0, lastNames.length)];
+  user.phone = phoneNumber;
+  user.password = password;
+  user.email = randomEmail();
+  user.avatar_url = avatar_url[getRandomInt(0, avatar_url.length)];
+
+  return user;
+}
+
+insertRandomUsersInDB = () => {
+  for(var i = 0; i < 30; i++) {
+    let user = createRandomUser();
+    pg('users').insert(user).then((res) => {
+      console.log('knex res', res);
+    }).catch((err) => {
+      console.log('knex ERROR', err);
+    });
+  }
+}
+
+
 module.exports = {
+  insertRandomUsersInDB: insertRandomUsersInDB,
 
   getUserInfo: (userId, callback) => {
     pg.table('users')

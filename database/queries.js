@@ -14,5 +14,7 @@ module.exports = {
   globalFeed: feed.globalFeed,
   myFeed: feed.myFeed,
   profileFeed: feed.profileFeed,
-  profileFeedRelational: feed.profileFeedRelational
+  profileFeedRelational: feed.profileFeedRelational,
+  insertRandomUsersInDB: profile.insertRandomUsersInDB
 }
+
