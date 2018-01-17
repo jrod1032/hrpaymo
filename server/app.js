@@ -185,8 +185,7 @@ app.get('/publicprofile', (req, res) => {
     }) 
 });
 
-app.get('/userData/:userId', (req, res) => {
-  console.log('reqparams: ', req.params)
+app.get('/userData/mosttransactions/:userId', (req, res) => {
   var userId = req.params.userId
   db.userAnalytics.getAllUserTransactions(userId, (err, transactionList) => {
     if (err) {
@@ -194,10 +193,23 @@ app.get('/userData/:userId', (req, res) => {
       res.status(503).end();
       return;
     }
-    console.log('list transaction names: ', transactionList)
     res.status(200).send(transactionList)
   }) 
 });
+
+app.get('/userData/totaltransactions/:username', (req, res) => {
+  console.log('reqparams: ', req.params)
+  var username = req.params.username;
+  db.userAnalytics.getAllUserAmountsSpent(username, (err, amountList) => {
+    if (err) {
+      console.log(err.message);
+      res.status(503).end();
+      return;
+    }
+    console.log('list of amounts: ', amountList);
+    res.status(200).send(amountList);
+  })
+})
 
 // FEED ENDPOINTS
 

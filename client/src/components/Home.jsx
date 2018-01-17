@@ -5,6 +5,8 @@ import FeedContainer from './FeedContainer.jsx';
 import MiniProfile from './MiniProfile.jsx';
 import VerifyPhone from './VerifyPhone.jsx';
 import SimplePieChart from './userPieChart.jsx'
+import SimplePieChart from './userPieChart.jsx';
+import UserBarChart from './userBarChart.jsx';
 
 class Home extends React.Component {
   constructor (props) {
@@ -53,6 +55,7 @@ class Home extends React.Component {
           </div>
           <div className="home-rightColumn">
             <SimplePieChart userId={this.props.userInfo.userId}/>
+            <UserBarChart userInfo={this.props.userInfo}/>
             <MiniProfile 
               balance={this.props.balance}
               userInfo={this.props.userInfo}
