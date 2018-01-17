@@ -23,7 +23,6 @@ export default class VerifyPhone extends React.Component {
     }
   }
 
-
   componentDidMount() {
     this.getUserPhoneNumber(this.props.userInfo.userId);
   }
