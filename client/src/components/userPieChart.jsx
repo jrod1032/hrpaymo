@@ -8,18 +8,19 @@ const data = [{name: 'Cody', value: 2}, {name: 'Cherry', value: 3},
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
 
-const RADIAN = Math.PI / 180;                    
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+const RADIAN = Math.PI / 180;   
+
+
+const displayNames = ({ name, cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x  = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy  + radius * Math.sin(-midAngle * RADIAN);
- 
   return (
-    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'}  dominantBaseline="central">
-      {`${(percent * 100).toFixed(0)}%`}
+        <text x={x} y={y} fill="black" textAnchor={x > cx ? 'start' : 'end'}  dominantBaseline="central">
+      {name}
     </text>
-  );
-};
+    )
+}
 
 class SimplePieChart extends React.Component {
   constructor(props) {
@@ -31,8 +32,7 @@ class SimplePieChart extends React.Component {
   }
 
   componentDidMount () {
-    console.log('user id', this.props.userId)
-    axios.get(`/userData/${this.props.userId}`, { params: {userId: this.props.userId}})
+    axios.get(`/userData/mosttransactions/${this.props.userId}`, { params: {userId: this.props.userId}})
     .then( ({data}) => {
       console.log('transactiondata: ', data)
       var counter = data.reduce(function(allNames, name) {
@@ -43,7 +43,7 @@ class SimplePieChart extends React.Component {
         }
         return allNames
       }, {})
-      console.log(counter);
+
       var myTransactionData = [];
       for (name in counter) {
         var thisName = {};
@@ -51,7 +51,7 @@ class SimplePieChart extends React.Component {
         thisName.value = counter[name];
         myTransactionData.push(thisName);
       }
-      console.log('array of namecounts: ',myTransactionData )
+
       this.setState({
         transactions: myTransactionData
       });
@@ -73,10 +73,12 @@ class SimplePieChart extends React.Component {
           labelLine={false}
           outerRadius={80} 
           fill="#8884d8"
-          label={renderCustomizedLabel}
+          label={displayNames}
         >
           {
-            data.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
+            data.map((entry, index) => <Cell key={`cell-${index}`}
+              fill={COLORS[index % COLORS.length]}/>)
+            }
           }
         </Pie>
       </PieChart>
