@@ -8,6 +8,7 @@ const helpers = require('./helpers.js');
 var path = require('path');
 const _ = require('underscore');
 const setSocketListeners = require('./sockets');
+const sms = require('./sms');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -16,6 +17,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/../client/dist'));
+
+app.use('./sms', sms);
 
 app.post('/login', (req, res) => {
   var {username, password} = req.body;
