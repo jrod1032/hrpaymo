@@ -16,7 +16,6 @@ module.exports = {
   myFeed: feed.myFeed,
   profileFeed: feed.profileFeed,
   profileFeedRelational: feed.profileFeedRelational,
-<<<<<<< HEAD
   insertRandomUsersInDB: profile.insertRandomUsersInDB,
   storeMessage: messages.storeMessage,
   getTwoUsersByName: messages.getTwoUsersByName,
@@ -25,7 +24,3 @@ module.exports = {
   updatePhoneNumber: profile.updatePhoneNumber,
   verifyUserPhone: profile.verifyUserPhone
 }
-=======
-  getUserPhoneNumber: profile.getUserPhoneNumber
-}
->>>>>>> added route for looking up user phone number on modal load

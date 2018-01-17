@@ -16,21 +16,16 @@ export default class VerifyPhone extends React.Component {
       },
       open: false,
       validNumber: false,
-<<<<<<< HEAD
       reminderOpen: !this.props.userInfo.verified,
       codeFormIsOpen: false,
       showVerified: false,
       showError: false
-=======
-      reminderOpen: !this.props.userInfo.verified
->>>>>>> added route for looking up user phone number on modal load
     }
   }
 
 
   componentDidMount() {
     this.getUserPhoneNumber(this.props.userInfo.userId);
-<<<<<<< HEAD
   }
 
   getUserPhoneNumber(userId) { //this needs to have some sort of authentication
@@ -44,38 +39,6 @@ export default class VerifyPhone extends React.Component {
       }).catch(err  => {
         console.log(err);
       });
-=======
-  }
-
-  getUserPhoneNumber(userId) { //this needs to have some sort of authentication
-    console.log(userId)
-    const { formData } = this.state;
-    fetch(`/sms/userphone/${userId}`)
-      .then(res => res.json())
-      .then(json => {
-        console.log(json);
-        formData.phone = json.phone;
-        this.setState({ formData });
-        this.testNumber();
-      }).catch(err  => {
-        console.log(err);
-      });
-  }
-
-  submitForVerification() { //this needs to have some sort of authentication
-    return fetch(`/sms/verify/?p=${this.state.formData.phone}&uid=${this.props.userInfo.userId}`)
-      .then(res => res.json())
-      .then(json => {
-        console.log(json);
-      }).catch(err => {
-        console.log(err);
-      });
-  }
-
-  notNow() {
-    this.setState({ reminderOpen: false });
-    this.handleClose();
->>>>>>> added route for looking up user phone number on modal load
   }
 
   submitForVerification() { //this needs to have some sort of authentication
@@ -177,7 +140,6 @@ export default class VerifyPhone extends React.Component {
     this.setState({ open: false });
   };
 
-<<<<<<< HEAD
   openCodeInput() {
     this.setState({ codeFormIsOpen: true })
   };
@@ -186,8 +148,6 @@ export default class VerifyPhone extends React.Component {
     this.setState({ codeFormIsOpen: false })
   }
 
-=======
->>>>>>> added route for looking up user phone number on modal load
   render() {
     const { formData } = this.state;
     const actions = [
@@ -197,14 +157,11 @@ export default class VerifyPhone extends React.Component {
         keyboardFocused={true}
         disabled={!this.state.validNumber}
         onClick={this.submitForVerification.bind(this)}
-<<<<<<< HEAD
       />,
       <FlatButton
         label="Cancel"
         primary={true}
         onClick={this.handleClose.bind(this)}
-=======
->>>>>>> added route for looking up user phone number on modal load
       />,
       <FlatButton
         label="Not Now"
@@ -228,15 +185,12 @@ export default class VerifyPhone extends React.Component {
           autoHideDuration={3000}
           onActionClick={this.handleOpen.bind(this)}
           onRequestClose={()=>{}}
-<<<<<<< HEAD
         />
         <Snackbar
           open={this.state.showVerified}
           message="Thanks! You're all set!"
           autoHideDuration={5000}
           onRequestClose={() => { this.setState({ showVerified: false }) }}
-=======
->>>>>>> added route for looking up user phone number on modal load
         />
         <Dialog
           title="Enter your phone number"
