@@ -24,3 +24,4 @@ module.exports = {
   updatePhoneNumber: profile.updatePhoneNumber,
   verifyUserPhone: profile.verifyUserPhone
 }
+

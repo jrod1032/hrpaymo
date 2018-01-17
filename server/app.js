@@ -185,6 +185,20 @@ app.get('/publicprofile', (req, res) => {
     }) 
 });
 
+app.get('/userData/:userId', (req, res) => {
+  console.log('reqparams: ', req.params)
+  var userId = req.params.userId
+  db.userAnalytics.getAllUserTransactions(userId, (err, transactionList) => {
+    if (err) {
+      console.log(err.message);
+      res.status(503).end();
+      return;
+    }
+    console.log('list transaction names: ', transactionList)
+    res.status(200).send(transactionList)
+  }) 
+});
+
 // FEED ENDPOINTS
 
 const FEED_DEFAULT_LENGTH = 5;
