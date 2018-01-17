@@ -43,7 +43,6 @@ class SimplePieChart extends React.Component {
         }
         return allNames
       }, {})
-
       var myTransactionData = [];
       for (name in counter) {
         var thisName = {};

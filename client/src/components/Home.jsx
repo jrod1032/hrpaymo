@@ -52,6 +52,7 @@ class Home extends React.Component {
             />
           </div>
           <div className="home-rightColumn">
+            <SimplePieChart userId={this.props.userInfo.userId}/>
             <MiniProfile 
               balance={this.props.balance}
               userInfo={this.props.userInfo}
