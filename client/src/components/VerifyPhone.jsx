@@ -16,7 +16,10 @@ export default class VerifyPhone extends React.Component {
       },
       open: false,
       validNumber: false,
-      reminderOpen: !this.props.userInfo.verified
+      reminderOpen: !this.props.userInfo.verified,
+      codeFormIsOpen: false,
+      showVerified: false,
+      showError: false
     }
   }
 
@@ -25,12 +28,10 @@ export default class VerifyPhone extends React.Component {
   }
 
   getUserPhoneNumber(userId) { //this needs to have some sort of authentication
-    console.log(userId)
     const { formData } = this.state;
     fetch(`/sms/userphone/${userId}`)
       .then(res => res.json())
       .then(json => {
-        console.log(json);
         formData.phone = json.phone;
         this.setState({ formData });
         this.testNumber();
@@ -40,25 +41,53 @@ export default class VerifyPhone extends React.Component {
   }
 
   submitForVerification() { //this needs to have some sort of authentication
+    console.log('here')
     return fetch(`/sms/verification/start?p=${this.state.formData.phone}&uid=${this.props.userInfo.userId}`)
       .then(res => res.json())
       .then(json => {
-        console.log(json);
+        console.log('code sent', json);
+        if (json.message.body) { //secret code was sent
+          this.setState({
+            open: false,
+            codeFormIsOpen: true
+          })
+        }
+        else{ //phone number was not recognized
+          this.showError();
+        }
       }).catch(err => {
         console.log(err);
       });
   }
 
-  notNow() {
-    this.setState({ reminderOpen: false });
-    this.handleClose();
-  }
-
-  handleInputChanges(event) {
-    const { formData } = this.state;
-    formData[event.target.name] = event.target.value;
-    this.setState({ formData });
-    this.testNumber();
+  submitVerificationCode(code) {
+    console.log('submitVerificationCode', code)
+    return fetch(`/sms/verification/verify`, {
+      method: 'post',
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+      body: JSON.stringify({
+        token: code,
+        p: this.state.formData.phone,
+        uid: this.props.userInfo.userId
+      })
+    })
+      .then(res => res.json())
+      .then(json => {
+        console.log('code verification success', json);
+        this.setState({
+          open: false,
+          reminderOpen: false,
+          showVerified: true,
+          codeFormIsOpen: false
+        })
+      }).catch(err => {
+        // this.setState({
+        //   open: true
+        // })
+        console.log(err);
+      });
   }
 
   testNumber() {
@@ -70,6 +99,36 @@ export default class VerifyPhone extends React.Component {
     }
   }
 
+  handleInputChanges(event) {
+    const { formData } = this.state;
+    formData[event.target.name] = event.target.value;
+    this.setState({ formData });
+    this.testNumber();
+  }
+
+  closeError() {
+    this.setState(showError: false);
+  }
+
+  openError() {
+    this.setState({showError: true});
+    setTimeout(this.closeError.bind(this), 1500);
+  }
+
+  notNow() {
+    this.setState({ reminderOpen: false });
+    this.handleClose();
+  }
+
+  enter(e) {
+    if (e.key === 'Enter') {this.handleSubmit.bind(this)};
+  }
+
+  handleSubmit() {
+    if (this.state.validNumber) { this.submitForVerification() }
+  }
+
+
   handleOpen() {
     this.setState({ open: true });
   };
@@ -77,6 +136,14 @@ export default class VerifyPhone extends React.Component {
   handleClose() {
     this.setState({ open: false });
   };
+
+  openCodeInput() {
+    this.setState({ codeFormIsOpen: true })
+  };
+
+  closeCodeInput() {
+    this.setState({ codeFormIsOpen: false })
+  }
 
   render() {
     const { formData } = this.state;
@@ -98,9 +165,15 @@ export default class VerifyPhone extends React.Component {
         primary={true}
         onClick={this.notNow.bind(this)}
       />
+      // ,
+      // <FlatButton
+      //   label="Test"
+      //   primary={true}
+      //   onClick={this.openCodeInput.bind(this)}
+      // />
     ];
     return (
-      <div>
+      <div id='phone_verification'>
         <Snackbar
           open={this.state.reminderOpen}
           message='Please verify your phone number'
@@ -108,6 +181,12 @@ export default class VerifyPhone extends React.Component {
           autoHideDuration={3000}
           onActionClick={this.handleOpen.bind(this)}
           onRequestClose={()=>{}}
+        />
+        <Snackbar
+          open={this.state.showVerified}
+          message="Thanks! You're all set!"
+          autoHideDuration={5000}
+          onRequestClose={() => { this.setState({ showVerified: false }) }}
         />
         <Dialog
           title="Enter your phone number"
@@ -123,6 +202,7 @@ export default class VerifyPhone extends React.Component {
           >
             <TextValidator
               floatingLabelText="Phone Number"
+              onKeyUp={this.enter.bind(this)}
               onChange={this.handleInputChanges.bind(this)}
               name="phone"
               value={formData.phone}
@@ -131,7 +211,81 @@ export default class VerifyPhone extends React.Component {
             />
           </ValidatorForm>
         </Dialog>
+        <EnterCodeForm 
+          open={this.state.codeFormIsOpen} 
+          formAction={this.submitVerificationCode.bind(this)}
+          closer={this.closeCodeInput.bind(this)}
+        />
+        <Dialog 
+          title="Hmm, that didn't quite work. Please try again!"
+          open={this.state.showError}
+          actions={
+            <FlatButton
+              label="Ok"
+              primary={true}
+              onClick={this.openCodeInput.bind(this)}
+              keyboardFocused={true}
+            />}
+
+        />
       </div>
+    );
+  }
+}
+
+class EnterCodeForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: this.props.open,
+      code: ''
+    }
+  }
+
+  handleSubmit() {
+    console.log('submitting code:', this.state.code)
+    this.props.formAction(this.state.code);
+    this.setState( { code: '' } );
+    this.props.closer()
+  }
+
+  enter(e) {
+    if (e.key === 'Enter') (this.handleSubmit());
+  }
+
+  handleChange(e) {
+    this.setState( { code: e.target.value } );
+  }
+
+  render() {
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        primary={true}
+        onClick={this.props.closer}
+      />,
+      <FlatButton
+        label="Verify"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.handleSubmit.bind(this)}
+      />,
+    ]
+    return (
+      <Dialog
+        title="Enter the code sent to your phone"
+        actions={actions}
+        modal={false}
+        open={this.props.open}
+        onRequestClose={this.props.closer}
+      >
+        <TextField 
+          hintText="ex. '0000'" 
+          onChange={this.handleChange.bind(this)} 
+          onKeyUp={this.enter.bind(this)}
+          value={this.state.code}
+        />
+      </Dialog>
     );
   }
 }
