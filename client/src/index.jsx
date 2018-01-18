@@ -36,6 +36,7 @@ class App extends React.Component {
       balance: null,
       userInfo: {}
     }
+    this.logUserOut = this.logUserOut.bind(this);
   }
 
   loadUserData(userId) {
