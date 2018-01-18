@@ -41,7 +41,6 @@ export default class VerifyPhone extends React.Component {
   }
 
   submitForVerification() { //this needs to have some sort of authentication
-    console.log('here')
     return fetch(`/sms/verification/start?p=${this.state.formData.phone}&uid=${this.props.userInfo.userId}`)
       .then(res => res.json())
       .then(json => {
@@ -161,7 +160,6 @@ export default class VerifyPhone extends React.Component {
     if (this.state.validNumber) { this.submitForVerification() }
   }
 
-
   handleOpen() {
     this.setState({ open: true });
   };
@@ -198,12 +196,6 @@ export default class VerifyPhone extends React.Component {
         primary={true}
         onClick={this.notNow.bind(this)}
       />
-      // ,
-      // <FlatButton
-      //   label="Test"
-      //   primary={true}
-      //   onClick={this.openCodeInput.bind(this)}
-      // />
     ];
       // , //uncomment me to add a button that pops open the code input window
       // <FlatButton
