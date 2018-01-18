@@ -32,13 +32,12 @@ export default class VerifyPhone extends React.Component {
     fetch(`/sms/userphone/${userId}`)
       .then(res => res.json())
       .then(json => {
-        console.log(json)
         formData.phone = json.phone;
         this.setState({ formData });
         setTimeout(() => { this.setState({ reminderOpen: !json.verified })}, 1000)
         this.testNumber();
       }).catch(err  => {
-        console.log(err);
+        console.warn(err);
       });
   }
 
@@ -56,7 +55,7 @@ export default class VerifyPhone extends React.Component {
           this.openError();
         }
       }).catch(err => { //error with request
-        console.log('error with request', err);
+        console.warn('error with request', err);
       });
   }
 
@@ -77,7 +76,6 @@ export default class VerifyPhone extends React.Component {
           this.setState({
             open: false,
             reminderOpen: false,
-            // showVerified: true,
             codeFormIsOpen: false
           })
           setTimeout(() => { this.setState({ showVerified: true }) }, 1000)
@@ -92,7 +90,7 @@ export default class VerifyPhone extends React.Component {
         this.setState({
           codeFormIsOpen: true
         })
-        console.log(err);
+        console.warn(err);
       });
   }
 
@@ -239,7 +237,7 @@ export default class VerifyPhone extends React.Component {
           <ValidatorForm
             ref="form"
             onSubmit={this.handleClose.bind(this)}
-            onError={errors => console.log(errors)}
+            onError={errors => console.warn(errors)}
           >
             <TextValidator
               floatingLabelText="Phone Number"
