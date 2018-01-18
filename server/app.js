@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
-let http = require('http').Server(app);
-let io = require('socket.io')(http);
+let https = require('http').Server(app);
+let io = require('socket.io')(https);
 const bodyParser = require('body-parser');
 const db = require('../database/queries.js');
 const helpers = require('./helpers.js');
@@ -289,5 +289,5 @@ app.get('*', (req, res) => {
 
 setSocketListeners(io);
 
-module.exports = http;
+module.exports = https;
 

@@ -4,7 +4,7 @@ import FriendList from './ChatFriendList.jsx';
 import {ChatMessages, ChatBox} from './ChatMessages.jsx';
 import Navbar from './Navbar.jsx';
 import openSocket from 'socket.io-client';
-const socket = openSocket('http://localhost:3000');
+const socket = openSocket('/');
 
 //REMOVE AFTER
 import Badge from 'material-ui/Badge';
