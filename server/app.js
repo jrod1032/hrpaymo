@@ -1,10 +1,13 @@
 const express = require('express');
 const app = express();
+let https = require('http').Server(app);
+let io = require('socket.io')(https);
 const bodyParser = require('body-parser');
 const db = require('../database/queries.js');
 const helpers = require('./helpers.js');
 var path = require('path');
 const _ = require('underscore');
+const setSocketListeners = require('./sockets');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -263,9 +266,28 @@ app.get('/feed/relational', (req, res) => {
     })
 });
 
+app.get('/messages', (req, res) => {
+  db.getAllMessagesBetweenTwoUsers(req.query.currentUser, req.query.friend).then((messages) => {
+    res.json(messages);
+  });
+});
+
+app.post('/messages', (req, res) => {
+  console.log(req.body);
+
+  db.storeMessage(req.body.sender, req.body.receiver, req.body.chat).then(() => {
+    res.status(201).json(req.body);
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
+  });
+});
+
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '..' , './client/dist/index.html'));
 });
 
-module.exports = app;
+setSocketListeners(io);
+
+module.exports = https;
 

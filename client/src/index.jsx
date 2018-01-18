@@ -36,9 +36,7 @@ class App extends React.Component {
       balance: null,
       userInfo: {}
     }
-  }
-
-  componentDidMount() {
+    this.logUserOut = this.logUserOut.bind(this);
   }
 
   loadUserData(userId) {
@@ -133,6 +131,7 @@ class App extends React.Component {
         this.setState({
           userInfo: response.data
         });
+        localStorage.setItem('user', JSON.stringify(response.data));
       })
       .catch((err) =>{
         console.error(err);
@@ -214,7 +213,8 @@ class App extends React.Component {
           <Switch>
           <Route 
               exact path="/chat"  
-              render={routeProps => <Chat {...routeProps} userData={this.state.userInfo}/>}
+              render={routeProps => <Chat {...routeProps} userInfo={this.state.userInfo} 
+              isLoggedIn={this.state.isLoggedIn} logUserOut={this.logUserOut}/>}
             />
             <Route 
               exact path="/signup" 

@@ -1,10 +1,71 @@
 import React, { Component } from 'react';
-import Avatar from 'material-ui/Avatar';
-import {List, ListItem} from 'material-ui/List';
-import Card from 'material-ui/Card';
-import Subheader from 'material-ui/Subheader';
-import Divider from 'material-ui/Divider';
+import axios from 'axios';
+import FriendList from './ChatFriendList.jsx';
+import {ChatMessages, ChatBox} from './ChatMessages.jsx';
+import Navbar from './Navbar.jsx';
+import openSocket from 'socket.io-client';
+const socket = openSocket('/');
+
+//REMOVE AFTER
+import Badge from 'material-ui/Badge';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
+
+const fakeData = [
+  {
+    friend: {
+      username: 'cody', 
+      imageUrl: 'image'
+    },
+    messages: [
+      {
+        sender: 'cody',
+        reciever: 'newguy',
+        message: 'Hello newguy'
+      },
+      {
+        sender: 'newguy',
+        reciever: 'cody',
+        message: 'Hello cody'
+      }
+    ]
+  },
+  {
+    friend: {
+      username: 'cherry', 
+      imageUrl: 'image'
+    },
+    messages: [
+      {
+        sender: 'cherry',
+        reciever: 'blam92',
+        message: 'Hello blam92 I am cherry'
+      },
+      {
+        sender: 'blam92',
+        reciever: 'cherry',
+        message: 'oh hi!'
+      }
+    ]
+  },
+  {
+    friend: {
+      username: 'jarrod', 
+      imageUrl: 'image'
+    },
+    messages: [
+      {
+        sender: 'blam92',
+        reciever: 'jarrod',
+        message: 'Hello jarrod! u there?'
+      },
+      {
+        sender: 'jarrod',
+        reciever: 'blam92',
+        message: 'Hello jarrod! u there?'
+      }
+    ]
+  }
+] 
 
 const styles = {
   container: {
@@ -12,65 +73,170 @@ const styles = {
     gridTemplateColumns: '1fr 2fr',
     gridTemplateRows: '1fr',
     gridTemplateAreas: "'friendList chat'",
-    height: '500px'
   },
 
   friendList: {
-    gridArea: 'friendList',
-    borderStyle: 'solid',
+    gridArea: 'friendList'
   },
   chat: {
     display: 'grid',
     gridArea: 'chat',
-    borderStyle: 'solid',
     gridTemplateColumns: '1fr',
     gridTemplateRows: '1fr 100px',
     gridTemplateAreas: "'messageBox' 'chatBox'"
   },
   messageBox: {
-    gridArea: 'messageBox',
-    borderStyle: 'solid',
+    gridArea: 'messageBox'
   },
   chatBox: {
-    gridArea: 'chatBox',
-    borderStyle: 'solid',
+    gridArea: 'chatBox'
   }
 };
 
-const FriendItem = (props) => (
-  <ListItem
-  primaryText={props.name || 'Random User'}
-  leftAvatar={<Avatar src={props.imageUrl || ''} />}
-  rightIcon={<CommunicationChatBubble />}
-  />
-);
-
-const FriendList = () => {
-  // let friends = props.friendList..
-  return (
-  <Card>
-    <List>
-      <Subheader>Friend List</Subheader>
-      <Divider/>
-      <FriendItem/>
-    </List>
-  </Card>
-  )
-}
-
 class Chat extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      users: [],
+      chats: fakeData,
+      onlineUsers: [],
+      currentChatData: {
+        friend: {
+          username: '', 
+          imageUrl: ''
+        },
+        messages: []
+      },
+      notifications: {}
+    }
+    this.sendMessage = this.sendMessage.bind(this);
+    this.openChatWithFriend = this.openChatWithFriend.bind(this);
+  }
+  componentDidMount() {
+    this.getUsers();
+    socket.on('chat', (chatData) => {
+      this.updateChats(chatData.message, chatData.friendId, chatData.friendUsername);
+    });
+    socket.on('user disconnect', (onlineUsers) => {
+      this.setState({
+        onlineUsers: onlineUsers
+      })
+
+      console.log('USER DISCONNECT, ACTIVE: ', onlineUsers);
+    });
+    socket.on('user connect', (onlineUsers) => {
+      this.setState({
+        onlineUsers: onlineUsers
+      });
+      console.log('USER CONNECT, ACTIVE: ', onlineUsers);
+    });
+    socket.emit('user connect', this.props.userInfo);
+  }
+
+  getUsers() {
+    axios('/usernames', { params: { userId: this.props.userInfo.userId }})
+    .then(response => {
+      this.setState({
+        users: response.data.usernames
+      });
+    })
+    .catch(err => {
+      console.error(err);
+    })
+  }
+
+  sendMessage(message) {
+    socket.emit('chat', {
+      newMessage: message,
+      receiverInfo: this.state.currentChatData.friend,
+      senderId: this.props.userInfo.userId,
+      senderUsername: this.props.userInfo.username
+    });
+    this.updateChats(message, this.state.currentChatData.friend.id);
+
+    this.postMessage(this.props.userInfo.username, this.state.currentChatData.friend.username, message)
+    .then((res) => {
+      console.log('message has been posted', res);
+    }).catch((err) => {
+      console.log('error posting message', err);
+    })
+
+  }
+  updateChats(message, friendId, friendUsername) {
+    //check if the user who sent the message is currently being displayed.
+    if(this.state.currentChatData.friend.id === friendId) {
+      let updatedData = Object.assign({}, this.state.currentChatData);
+      updatedData.messages.push({
+        sender_id: this.state.currentChatData.friend.id,
+        receiver_id: this.props.userInfo.userId,
+        chat: message
+      });
+  
+      this.setState({
+        currentChatData: updatedData
+      });
+    } else {
+      let notifications = Object.assign({}, this.state.notifications);
+      console.log('STATUS OF NOTIFICATIONS', notifications[friendUsername]);
+      notifications[friendUsername] = notifications[friendUsername] + 1 || 1;
+      console.log('UPDATED NOTIFICATIONS', notifications[friendUsername]);
+      this.setState({
+        notifications: notifications
+      });
+    }
+  }
+
+  openChatWithFriend(friendUsername) {
+    let notifications = Object.assign({}, this.state.notifications);
+    delete notifications[friendUsername]
+
+    this.getChatHistory(friendUsername, (data) => {
+      this.setState({
+        currentChatData: data,
+        notifications: notifications
+      })
+    });
+  }
+
+  getChatHistory(friendName, cb) {
+    axios('/messages', { params: { currentUser: this.props.userInfo.username, friend: friendName }})
+    .then(response => {
+      cb(response.data);
+    })
+    .catch(err => {
+      console.error(err);
+    })
+  }
+
+  postMessage(sender, receiver, message) {
+    return axios.post('/messages', {
+      sender: sender,
+      receiver: receiver,
+      chat: message
+    });
+  }
 
   render() {
     return (
-      <div style={styles.container}>
-        <div style={styles.friendList} className="friend-list">
-          <FriendList/>
-        </div>
-        <div style={styles.chat} className="chat">
-          <div style={styles.messageBox} className="messagebox">
-
+      <div>
+        <Navbar 
+        isLoggedIn={this.props.isLoggedIn} 
+        logUserOut={this.props.logUserOut}
+        />
+        <div style={styles.container}>
+          <div style={styles.friendList} className="friend-list">
+            <FriendList onlineUsers={this.state.onlineUsers} 
+            users={this.state.users} notifications={this.state.notifications} openChat={this.openChatWithFriend}/>
           </div>
-          <div style={styles.chatBox} className="chatbox">
+          <div style={styles.chat} className="chat">
+            <div style={styles.messageBox} className="messagebox">
+              <ChatMessages chats={this.state.currentChatData} 
+              userAvatar={this.props.userInfo.avatarUrl} currentUserId={this.props.userInfo.userId}/>
+            </div>
+            <div style={styles.chatBox} className="chatbox">
+              <ChatBox sendMessage={this.sendMessage}/>
+            </div>
           </div>
         </div>
       </div>
