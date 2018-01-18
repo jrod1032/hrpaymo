@@ -8,3 +8,5 @@ script:
   - npm test
 services:
   - postgresql
+notifications:
+  slack: hrsf86:bvMPENPyd23RP2uTwjBENyY2
