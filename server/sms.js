@@ -22,48 +22,46 @@ const verify = (req, res) => {
       .then(response => {
         console.log('Confirm phone success confirming code: ', response);
         if (response.success) {
-          db.updatePhoneNumber(req.body.p, req.body.uid)
-          .then(resp => {
-            db.verifyPhone(resp.id, resp.phone)
-            res.status(200).json(response);
-          })
-          .catch(err => {
-            console.log('error updating database', err);
-            res.status(200).json(err);
-          })
+          db.verifyUserPhone(req.body.uid)
+            .then(resp => {
+              res.status(200).json({ success: true });
+            }).catch(err => {
+              console.log('error updating database', err);
+              res.status(500).json({ success: false });
+            })
         } 
-        else { res.status(200).json(err) }//got response but was unsuccessful
-      })
-      .catch(err => {
+        else { res.status(500).json({ success: false }) }//got response but was unsuccessful
+      }).catch(err => {
         console.log('error creating phone reg request', err);
-        res.status(500).json(err);
+        res.status(500).json({success: false});
       })
   } 
   else {
     console.log('Failed in Confirm Phone request body: ', req.body);
-    res.status(500).json({ error: "Missing fields" });
+    res.status(500).json({ success: false });
   }
 };
 
 const request = (req, res) => {
   console.log('verifying phone number', req.query.p, req.query.uid)
   let phoneDetails = getPhoneNumberParts(req.query.p);
-  if (!phoneDetails) {res.status(500).end()} //error if phone number is invalid length
-  db.updatePhoneNumber(req.query.p, req.query.uid)
-    .then((row) => {
-      console.log('successfully updated database for user', row)
-    })
-    .catch(err => {
-      console.log('could not update user in db', err)
-    })
+  if (!phoneDetails) { res.status(500).json({ success: false })} //error if phone number is invalid length
   lib.verify.requestPhoneVerification(phoneDetails.phone_number, phoneDetails.country_code)
     .then(response => {
       console.log('Success register phone API call: ', response);
-      res.status(200).json(response);
+      db.updatePhoneNumber(req.query.p, req.query.uid)
+        .then((row) => {
+          console.log('successfully updated database for user', row)
+          res.status(200).json({ success: true });
+        })
+        .catch(err => {
+          console.log('could not update user in db', err)
+          res.status(500).json({ success: false });
+        })
     })
     .catch(err => {
       console.log('error creating phone reg request', err);
-      res.status(500).json(err);
+      res.status(500).json({ success: false });
     })
 };
 

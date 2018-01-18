@@ -41,27 +41,24 @@ export default class VerifyPhone extends React.Component {
   }
 
   submitForVerification() { //this needs to have some sort of authentication
-    console.log('here')
     return fetch(`/sms/verification/start?p=${this.state.formData.phone}&uid=${this.props.userInfo.userId}`)
       .then(res => res.json())
       .then(json => {
-        console.log('code sent', json);
-        if (json.message.body) { //secret code was sent
+        if (json.success) { //secret code was sent
           this.setState({
             open: false,
             codeFormIsOpen: true
           })
         }
         else{ //phone number was not recognized
-          this.showError();
+          this.openError();
         }
-      }).catch(err => {
-        console.log(err);
+      }).catch(err => { //error with request
+        console.log('error with request', err);
       });
   }
 
   submitVerificationCode(code) {
-    console.log('submitVerificationCode', code)
     return fetch(`/sms/verification/verify`, {
       method: 'post',
       headers: new Headers({
@@ -72,20 +69,26 @@ export default class VerifyPhone extends React.Component {
         p: this.state.formData.phone,
         uid: this.props.userInfo.userId
       })
-    })
-      .then(res => res.json())
+    }).then(res => res.json())
       .then(json => {
-        console.log('code verification success', json);
-        this.setState({
-          open: false,
-          reminderOpen: false,
-          showVerified: true,
-          codeFormIsOpen: false
-        })
+        if (json.success) {
+          this.setState({
+            open: false,
+            reminderOpen: false,
+            showVerified: true,
+            codeFormIsOpen: false
+          })
+        } else {
+          this.openError();
+          this.setState({
+            codeFormIsOpen: true
+          })
+        }
       }).catch(err => {
-        // this.setState({
-        //   open: true
-        // })
+        this.openError();
+        this.setState({
+          codeFormIsOpen: true
+        })
         console.log(err);
       });
   }
@@ -107,7 +110,7 @@ export default class VerifyPhone extends React.Component {
   }
 
   closeError() {
-    this.setState(showError: false);
+    this.setState({ showError: false });
   }
 
   openError() {
@@ -127,7 +130,6 @@ export default class VerifyPhone extends React.Component {
   handleSubmit() {
     if (this.state.validNumber) { this.submitForVerification() }
   }
-
 
   handleOpen() {
     this.setState({ open: true });
@@ -149,11 +151,6 @@ export default class VerifyPhone extends React.Component {
     const { formData } = this.state;
     const actions = [
       <FlatButton
-        label="Cancel"
-        primary={true}
-        onClick={this.handleClose.bind(this)}
-      />,
-      <FlatButton
         label="Submit"
         primary={true}
         keyboardFocused={true}
@@ -161,17 +158,23 @@ export default class VerifyPhone extends React.Component {
         onClick={this.submitForVerification.bind(this)}
       />,
       <FlatButton
+        label="Cancel"
+        primary={true}
+        onClick={this.handleClose.bind(this)}
+      />,
+      <FlatButton
         label="Not Now"
         primary={true}
         onClick={this.notNow.bind(this)}
       />
-      // ,
+    ];
+      // , //uncomment me to add a button that pops open the code input window
       // <FlatButton
       //   label="Test"
       //   primary={true}
       //   onClick={this.openCodeInput.bind(this)}
       // />
-    ];
+    // ];
     return (
       <div id='phone_verification'>
         <Snackbar
@@ -223,7 +226,7 @@ export default class VerifyPhone extends React.Component {
             <FlatButton
               label="Ok"
               primary={true}
-              onClick={this.openCodeInput.bind(this)}
+              onClick={this.closeError.bind(this)}
               keyboardFocused={true}
             />}
 
@@ -243,7 +246,6 @@ class EnterCodeForm extends React.Component {
   }
 
   handleSubmit() {
-    console.log('submitting code:', this.state.code)
     this.props.formAction(this.state.code);
     this.setState( { code: '' } );
     this.props.closer()
@@ -283,6 +285,7 @@ class EnterCodeForm extends React.Component {
           hintText="ex. '0000'" 
           onChange={this.handleChange.bind(this)} 
           onKeyUp={this.enter.bind(this)}
+          floatingLabelText="Verification Code"
           value={this.state.code}
         />
       </Dialog>

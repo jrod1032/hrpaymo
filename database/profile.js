@@ -106,13 +106,17 @@ module.exports = {
   },
 
   updatePhoneNumber: (phoneNumber, userId) => {
-    console.log(phoneNumber, userId)
     return pg.table('users')
       .where('id', userId)
-      .returning(['phone', 'id', 'verified', 'authy_id'])
-      .update({
-        phone: phoneNumber
-      })
+      .returning(['phone', 'id', 'verified'])
+      .update({ phone: phoneNumber })
+  },
+
+  verifyUserPhone: (userId) => {
+    return pg.table('users')
+      .where('id', userId)
+      .returning(['id', 'verified'])
+      .update({ verified: true })
   }
 };
 
