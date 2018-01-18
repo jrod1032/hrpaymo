@@ -101,8 +101,8 @@ module.exports = {
   getUserPhoneNumber: (userId) => {
     return pg.table('users')
       .where({ id: userId })
-      .select('phone')
-      .then(row => row[0].phone)
+      .select('phone', 'verified')
+      .then(row => row[0])
   },
 
   updatePhoneNumber: (phoneNumber, userId) => {

@@ -65,6 +65,7 @@ app.get('/profile', (req, res) => {
         var ui = row[0];
         var userInfo = {
           userId: ui.id,
+          verified: ui.verified,
           username: _.unescape(ui.username),
           displayName: _.unescape(ui.first_name + ' ' + ui.last_name),
           createdAt: _.unescape(ui.created_at),

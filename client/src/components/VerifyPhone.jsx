@@ -16,7 +16,7 @@ export default class VerifyPhone extends React.Component {
       },
       open: false,
       validNumber: false,
-      reminderOpen: !this.props.userInfo.verified,
+      reminderOpen: false,
       codeFormIsOpen: false,
       showVerified: false,
       showError: false
@@ -32,8 +32,10 @@ export default class VerifyPhone extends React.Component {
     fetch(`/sms/userphone/${userId}`)
       .then(res => res.json())
       .then(json => {
+        console.log(json)
         formData.phone = json.phone;
         this.setState({ formData });
+        setTimeout(() => { this.setState({ reminderOpen: !json.verified })}, 1000)
         this.testNumber();
       }).catch(err  => {
         console.log(err);
@@ -75,9 +77,10 @@ export default class VerifyPhone extends React.Component {
           this.setState({
             open: false,
             reminderOpen: false,
-            showVerified: true,
+            // showVerified: true,
             codeFormIsOpen: false
           })
+          setTimeout(() => { this.setState({ showVerified: true }) }, 1000)
         } else {
           this.openError();
           this.setState({
@@ -176,6 +179,12 @@ export default class VerifyPhone extends React.Component {
     this.setState({ codeFormIsOpen: false })
   }
 
+  // showReminder() {
+  //   window.setTimeOut(()=> {
+  //     this.setState({ reminderOpen: !this.props.userInfo.verified });
+  //   }, 2000)
+  // }
+  
   render() {
     const { formData } = this.state;
     const actions = [
