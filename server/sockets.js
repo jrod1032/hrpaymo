@@ -1,9 +1,7 @@
 const _ = require('underscore');
 module.exports = setSocketListeners = (io) => {
   io.on('connection', (socket) => {
-    socket.on('chat', (message) => {
-      io.emit('chat', message);
-    });
+    chatEvents(socket, io);
     userEvents(socket, io);
   });
 }
@@ -20,12 +18,35 @@ let userEvents = (socket, io) => {
   });
 
   socket.on('disconnect', () => {
-    console.log('current socket id disconnected: ', socket.id);
     const indexOfUser = _.findIndex(onlineUsers, (user) => {
       return user.socketId === socket.id;
     });
     onlineUsers.splice(indexOfUser, 1);
-    console.log(onlineUsers);
     io.emit('user disconnect', onlineUsers);
+  });
+}
+
+let getUserSocketId = (array, userId) => {
+  let socketId = null;
+  array.forEach((val, index) => {
+    if(val.userData.userId === userId) {
+      socketId = val.socketId;
+      return;
+    }
+  });
+  return socketId;
+}
+
+let chatEvents = (socket, io) => {
+  socket.on('chat', (chatData) => {
+    console.log('received chat event', chatData);
+    const socketId = getUserSocketId(onlineUsers, chatData.receiverInfo.id);
+    if(socketId) {
+      socket.broadcast.to(socketId).emit('chat', {
+        message: chatData.newMessage,
+        friendId: chatData.senderId,
+        friendUsername: chatData.senderUsername
+      });
+    }
   });
 }

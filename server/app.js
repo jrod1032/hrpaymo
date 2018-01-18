@@ -267,10 +267,20 @@ app.get('/feed/relational', (req, res) => {
 });
 
 app.get('/messages', (req, res) => {
-  let sender = req.query.senderId;
-  let receiver = req.query.receiverId;
+  db.getAllMessagesBetweenTwoUsers(req.query.currentUser, req.query.friend).then((messages) => {
+    res.json(messages);
+  });
+});
 
-  res.json({sender: sender, receiver: receiver});
+app.post('/messages', (req, res) => {
+  console.log(req.body);
+
+  db.storeMessage(req.body.sender, req.body.receiver, req.body.chat).then(() => {
+    res.status(201).json(req.body);
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
+  });
 });
 
 app.get('*', (req, res) => {

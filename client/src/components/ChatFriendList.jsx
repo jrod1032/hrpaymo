@@ -9,8 +9,8 @@ import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bu
 const FriendItem = (props) => (
   <ListItem
   primaryText={props.username || 'Random User'}
-  leftAvatar={<Avatar src={props.imageUrl || ''} />}
-  rightIcon={<CommunicationChatBubble />}
+  // leftAvatar={<Avatar src={props.imageUrl || ''} />}
+  rightIcon={<CommunicationChatBubble color={props.pendingMessages ? 'green' : '#757575'}/>}
   value={props.username}
   onClick={() => props.openChat(props.username)}
   />
@@ -18,7 +18,12 @@ const FriendItem = (props) => (
 
 const FriendList = (props) => {
   const friendItems = props.users.map((username, index) => {
-    return <FriendItem username={username} key={index} openChat={props.openChat}/>
+    let pendingMessages = null;
+    if(props.notifications[username]) {
+      pendingMessages = true;
+    }
+    return <FriendItem username={username} key={index} openChat={props.openChat}
+    pendingMessages={pendingMessages}/>
   });
   return (
   <Card>

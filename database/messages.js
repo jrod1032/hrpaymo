@@ -1,17 +1,17 @@
 const pg = require('./index.js').pg;
 const profileHelpers = require('./profile');
 
-let getTwoUsersByName = (senderName, receiverName) => {
-  return profileHelpers.getProfileDataByUsername(senderName)
-  .then((senderUser) => {
-    return senderUser;
+let getTwoUsersByName = (firstUser, secondUser) => {
+  return profileHelpers.getProfileDataByUsername(firstUser)
+  .then((user) => {
+    return user;
   })
-  .then((sendUser) => {
-    return profileHelpers.getProfileDataByUsername(receiverName)
-    .then((receiverUser) => {
+  .then((userOne) => {
+    return profileHelpers.getProfileDataByUsername(secondUser)
+    .then((userTwo) => {
       return {
-        sendUser: sendUser[0],
-        receiverUser: receiverUser[0]
+        userOne: userOne[0],
+        userTwo: userTwo[0]
       }
     });
   });
@@ -19,16 +19,20 @@ let getTwoUsersByName = (senderName, receiverName) => {
 
 let getAllMessagesBetweenTwoUsers = (firstUser, secondUser) => {
   return getTwoUsersByName(firstUser, secondUser).then((users) => {
+    console.log('users!!', users.userTwo.id);
     return pg('messages').where({
-      sender_id: users.sendUser.id,
-      receiver_id: users.receiverUser.id
+      sender_id: users.userOne.id,
+      receiver_id: users.userTwo.id
     })
     .then((messages) => {
       return pg('messages').where({
-        sender_id: users.receiverUser.id,
-        receiver_id: users.sendUser.id
+        sender_id: users.userTwo.id,
+        receiver_id: users.userOne.id
       }).then((invertedMessages) => {
-        return messages.concat(invertedMessages);
+        return {
+          friend: users.userTwo,
+          messages: messages.concat(invertedMessages)
+        }
       })
     });
   });
@@ -36,16 +40,16 @@ let getAllMessagesBetweenTwoUsers = (firstUser, secondUser) => {
 
 
 let storeMessage = (senderUsername, receiverUsername, text) => {
-  getTwoUsersByName(senderUsername, receiverUsername)
+  return getTwoUsersByName(senderUsername, receiverUsername)
   .then((users) => {
-    pg('messages').insert({
-      sender_id: users.sendUser.id,
-      receiver_id: users.receiverUser.id,
+    return pg('messages').insert({
+      sender_id: users.userOne.id,
+      receiver_id: users.userTwo.id,
       chat: text
     }).catch((err) => {
-      console.log(err);
+      return err;
     }).then((res) => {
-      console.log('message saved!');
+      return 'message saved!';
     });
   });
 }

@@ -38,15 +38,6 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount() {
-    const userData = JSON.parse(localStorage.getItem('user'));
-    if(userData) {
-      this.setState({
-        userInfo: userData
-      });
-    }
-  }
-
   loadUserData(userId) {
     this.getUserInfo(userId)
     this.getBalance(userId);
@@ -221,7 +212,8 @@ class App extends React.Component {
           <Switch>
           <Route 
               exact path="/chat"  
-              render={routeProps => <Chat {...routeProps} userInfo={this.state.userInfo}/>}
+              render={routeProps => <Chat {...routeProps} userInfo={this.state.userInfo} 
+              isLoggedIn={this.state.isLoggedIn} logUserOut={this.logUserOut}/>}
             />
             <Route 
               exact path="/signup" 

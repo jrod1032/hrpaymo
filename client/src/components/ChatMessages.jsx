@@ -39,12 +39,19 @@ const Message = (props) => {
 
 const ChatMessages = (props) => {
   const messages = props.chats.messages.map((val, index) => {
-    let image = val.sender === props.username ? props.userAvatar : val.imageUrl;
-    return <Message message={val.message} imageUrl={image} key={index}/>
+    let image = val.sender_id === props.currentUserId ? props.userAvatar : props.chats.friend.avatar_url;
+    return <Message message={val.chat} imageUrl={image} key={index}/>
   });
 
   return (
     <Card style={{width: '100%', height: '100%'}}>
+      <ListItem
+      disabled={true}
+      primaryText={props.chats.friend.username}
+      leftAvatar={<Avatar src={props.chats.friend.avatar_url} />}
+      style={{fontWeight: 'bold'}}
+      />
+      <Divider/>
       {messages}
     </Card>
   );
