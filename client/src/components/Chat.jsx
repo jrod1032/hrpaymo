@@ -6,6 +6,10 @@ import Navbar from './Navbar.jsx';
 import openSocket from 'socket.io-client';
 const socket = openSocket('http://localhost:3000');
 
+//REMOVE AFTER
+import Badge from 'material-ui/Badge';
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
+
 const fakeData = [
   {
     friend: {
@@ -118,12 +122,15 @@ class Chat extends Component {
       this.setState({
         onlineUsers: onlineUsers
       })
+
+      console.log('USER DISCONNECT, ACTIVE: ', onlineUsers);
     });
-    socket.on('user connect', (users) => {
+    socket.on('user connect', (onlineUsers) => {
       this.setState({
-        onlineUsers: users
+        onlineUsers: onlineUsers
       });
-    })
+      console.log('USER CONNECT, ACTIVE: ', onlineUsers);
+    });
     socket.emit('user connect', this.props.userInfo);
   }
 
@@ -171,7 +178,9 @@ class Chat extends Component {
       });
     } else {
       let notifications = Object.assign({}, this.state.notifications);
-      notifications[friendUsername] = notifications[friendUsername]++ || 1;
+      console.log('STATUS OF NOTIFICATIONS', notifications[friendUsername]);
+      notifications[friendUsername] = notifications[friendUsername] + 1 || 1;
+      console.log('UPDATED NOTIFICATIONS', notifications[friendUsername]);
       this.setState({
         notifications: notifications
       });
@@ -217,7 +226,7 @@ class Chat extends Component {
         />
         <div style={styles.container}>
           <div style={styles.friendList} className="friend-list">
-            <FriendList friends={this.state.onlineUsers} 
+            <FriendList onlineUsers={this.state.onlineUsers} 
             users={this.state.users} notifications={this.state.notifications} openChat={this.openChatWithFriend}/>
           </div>
           <div style={styles.chat} className="chat">

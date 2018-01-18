@@ -25,6 +25,16 @@ const styles = {
       margin: '25%',
       cursor: 'pointer'
     }
+  },
+  messagebox: {
+    paper: {
+      height: 100,
+      width: 200,
+      textAlign: 'center',
+      margin: '20% 39%',
+      display: 'inline-block',
+      fontWeight: 'bold'
+    }
   }
 }
 
@@ -42,9 +52,9 @@ const ChatMessages = (props) => {
     let image = val.sender_id === props.currentUserId ? props.userAvatar : props.chats.friend.avatar_url;
     return <Message message={val.chat} imageUrl={image} key={index}/>
   });
-
-  return (
-    <Card style={{width: '100%', height: '100%'}}>
+  let renderedItem;
+  if(messages.length > 0) {
+    renderedItem = (<Card style={{width: '100%', height: '100%'}}>
       <ListItem
       disabled={true}
       primaryText={props.chats.friend.username}
@@ -53,8 +63,15 @@ const ChatMessages = (props) => {
       />
       <Divider/>
       {messages}
-    </Card>
-  );
+    </Card>)
+  } else {
+    renderedItem = (
+      <Card style={{width: '100%', height: '100%'}}>
+        <div style={styles.messagebox.paper}>Start chatting!</div>
+      </Card>
+    )
+  }
+  return renderedItem;
 }
 
 class ChatBox extends Component {
