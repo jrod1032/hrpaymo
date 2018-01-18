@@ -111,6 +111,7 @@ export default class VerifyPhone extends React.Component {
   }
 
   closeError() {
+    console.log('here')
     this.setState({ showError: false });
   }
 
@@ -140,7 +141,7 @@ export default class VerifyPhone extends React.Component {
   }
 
   closeError() {
-    this.setState(showError: false);
+    this.setState({showError: false});
   }
 
   openError() {
