@@ -8,5 +8,3 @@ script:
   - npm test
 services:
   - postgresql
-before_script:
-  - npm run 
