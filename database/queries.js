@@ -23,7 +23,7 @@ module.exports = {
   getAllMessagesBetweenTwoUsers: messages.getAllMessagesBetweenTwoUsers,
   getUserPhoneNumber: profile.getUserPhoneNumber,
   updatePhoneNumber: profile.updatePhoneNumber,
-  verifyUserPhone: profile.verifyUserPhone
-  getAllMessagesBetweenTwoUsers: messages.getAllMessagesBetweenTwoUsers
+  verifyUserPhone: profile.verifyUserPhone,
+  getAllMessagesBetweenTwoUsers: messages.getAllMessagesBetweenTwoUsers,
   userAnalytics: userAnalytics
 }
