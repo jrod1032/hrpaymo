@@ -60,6 +60,21 @@ module.exports = {
       .catch( (err) => {
         callback(err, null)
       })
+  },
+
+  getEmoji: (query, callback) => {
+    var subquery = `SELECT r_emoji FROM (SELECT reactions.emoji AS r_emoji, 
+    to_tsvector(reactions.description) AS document FROM reactions) AS r_search 
+    WHERE r_search.document @@ to_tsquery('${query}:*');`
+
+    pg.raw(query)
+      .then( (emojiList) => {
+        console.log('emojis! ', emojiList)
+        callback(null, emojiList)
+      })
+      .catch( (err) => {
+        callback(err, null);
+      })
   }
 
 };

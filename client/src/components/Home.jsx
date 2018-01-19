@@ -3,11 +3,8 @@ import Navbar from './Navbar.jsx';
 import Payment from './Payment.jsx';
 import FeedContainer from './FeedContainer.jsx';
 import MiniProfile from './MiniProfile.jsx';
-<<<<<<< HEAD
 import VerifyPhone from './VerifyPhone.jsx';
-=======
-import { withRouter, Link } from "react-router-dom";
->>>>>>> Implement WordCount Chart, refactor components
+
 
 class Home extends React.Component {
   constructor (props) {
