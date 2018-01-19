@@ -8,6 +8,7 @@ const helpers = require('./helpers.js');
 var path = require('path');
 const _ = require('underscore');
 const setSocketListeners = require('./sockets');
+const lib = require('../lib')
 const sms = require('./sms');
 
 // parse application/x-www-form-urlencoded
@@ -142,7 +143,10 @@ app.post('/pay', (req, res) => {
     return;
   }
   db.payment(paymentData)
-    .then(balance => {
+    .then(({balance, transactionId}) => {
+      lib.notify.notifyTransaction(transactionId);
+    // .then(balance => {
+      // sms.notifyTransaction(transactionId);
       res.status(201).json({ balance: balance });
     })
     .catch(err => {

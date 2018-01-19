@@ -1,12 +1,11 @@
 const pg = require('./index.js').pg;
-
 const pay = function(paymentDataFromServer) {
   let localPaymentInfo = {
     payerBalance: undefined,
     payeeBalance: undefined,
     payeeUserId: undefined
   }
-
+  let stupidHackyWorkaroundTXID;
   return new Promise ((res, rej) => {
     return pg.transaction(paymentTransaction => {
       return Promise.all([
@@ -25,6 +24,7 @@ const pay = function(paymentDataFromServer) {
       })
       // add to the transactions table with txn_id
       .then(txn_id => {
+        stupidHackyWorkaroundTXID = txn_id;
         return Promise.all([
           addTransaction(paymentTransaction, txn_id, paymentDataFromServer),
           updatePayerBalance(paymentTransaction, paymentDataFromServer, localPaymentInfo),
@@ -35,7 +35,8 @@ const pay = function(paymentDataFromServer) {
       .then(paymentTransaction.commit)
       // return the payer's balance
       .then(() => {
-        res(localPaymentInfo.payerBalance);
+        // res(localPaymentInfo.payerBalance);
+        res({balance: localPaymentInfo.payerBalance, transactionId: stupidHackyWorkaroundTXID});
       })
       .catch(err => {
         paymentTransaction.rollback;
