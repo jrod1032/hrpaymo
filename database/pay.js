@@ -5,7 +5,7 @@ const pay = function(paymentDataFromServer) {
     payeeBalance: undefined,
     payeeUserId: undefined
   }
-  let stupidHackyWorkaroundTXID;
+  let hackyWorkaroundTXID; //for message notifications, I need the transaction ID to be returned by this function, as well as whatever the authors needed
   return new Promise ((res, rej) => {
     return pg.transaction(paymentTransaction => {
       return Promise.all([
@@ -24,7 +24,7 @@ const pay = function(paymentDataFromServer) {
       })
       // add to the transactions table with txn_id
       .then(txn_id => {
-        stupidHackyWorkaroundTXID = txn_id;
+        hackyWorkaroundTXID = txn_id; //see note above
         return Promise.all([
           addTransaction(paymentTransaction, txn_id, paymentDataFromServer),
           updatePayerBalance(paymentTransaction, paymentDataFromServer, localPaymentInfo),
@@ -35,8 +35,8 @@ const pay = function(paymentDataFromServer) {
       .then(paymentTransaction.commit)
       // return the payer's balance
       .then(() => {
-        // res(localPaymentInfo.payerBalance);
-        res({balance: localPaymentInfo.payerBalance, transactionId: stupidHackyWorkaroundTXID});
+        // res(localPaymentInfo.payerBalance); //original, works, but will not allow notifications
+        res({ balance: localPaymentInfo.payerBalance, transactionId: hackyWorkaroundTXID });
       })
       .catch(err => {
         paymentTransaction.rollback;
