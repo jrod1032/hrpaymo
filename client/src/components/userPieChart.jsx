@@ -62,6 +62,7 @@ class SimplePieChart extends React.Component {
   }
   
   render () {
+    console.log('pie rendering')
     return (
       <div>
       &nbsp;&nbsp;
