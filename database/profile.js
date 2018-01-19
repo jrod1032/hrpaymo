@@ -6,7 +6,7 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-randomEmail = () => {
+let randomEmail = () => {
   let letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'];
   let email = '';
   for(var i = 0; i < 6; i++) {
@@ -20,7 +20,7 @@ randomEmail = () => {
   return email;
 }
 
-randomPhoneNumber = () => {
+let randomPhoneNumber = () => {
   let numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   let phone = '';
   for(var i = 0; i < 11; i++) {
@@ -29,7 +29,7 @@ randomPhoneNumber = () => {
   return phone;
 }
 
-createRandomUser = () => {
+let createRandomUser = () => {
   let names = ['John', 'Mike', 'Cody', 'Jarrod', 'Santiago', 'Aaron', 'Ginger', 'Larry', 'Albert'];
   let lastNames = ['Adamas', 'Xu', 'Iraola', 'Schnidler', 'Powell', 'Gimenez', 'Catania'];
   let phoneNumber = randomPhoneNumber();
@@ -51,7 +51,7 @@ createRandomUser = () => {
   return user;
 }
 
-insertRandomUsersInDB = () => {
+let insertRandomUsersInDB = () => {
   for(var i = 0; i < 30; i++) {
     let user = createRandomUser();
     pg('users').insert(user).then((res) => {

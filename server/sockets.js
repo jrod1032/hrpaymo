@@ -1,5 +1,6 @@
 const _ = require('underscore');
-module.exports = setSocketListeners = (io) => {
+
+let setSocketListeners = (io) => {
   io.on('connection', (socket) => {
     chatEvents(socket, io);
     userEvents(socket, io);
@@ -50,3 +51,5 @@ let chatEvents = (socket, io) => {
     }
   });
 }
+
+module.exports = setSocketListeners;
