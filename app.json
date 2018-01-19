@@ -10,7 +10,7 @@
     "TWILIO_PHONE_NUMBER": process.env.TWILIO_PHONE_NUMBER,
     "TWILIO_AUTH_TOKEN": process.env.TWILIO_AUTH_TOKEN,
     "TWILIO_ACCOUNT_SID": process.env.TWILIO_ACCOUNT_SID,
-    "ENABLE_SMS": process.env.ENABLE_SMS,
+    "ENABLE_SMS": process.env.ENABLE_SMS
   },
   "formation": {
     "web": {
