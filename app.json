@@ -3,15 +3,6 @@
   "description": "Pay your friends!",
   "scripts": {
   },
-  "env": {
-    "DATABASE_URL": process.env.DATABASE_URL,
-    "ACCOUNT_SECURITY_API_KEY": process.env.ACCOUNT_SECURITY_API_KEY,
-    "TEST_SECURITY_API_KEY": process.env.TEST_SECURITY_API_KEY,
-    "TWILIO_PHONE_NUMBER": process.env.TWILIO_PHONE_NUMBER,
-    "TWILIO_AUTH_TOKEN": process.env.TWILIO_AUTH_TOKEN,
-    "TWILIO_ACCOUNT_SID": process.env.TWILIO_ACCOUNT_SID,
-    "ENABLE_SMS": process.env.ENABLE_SMS
-  },
   "formation": {
     "web": {
       "quantity": 1
