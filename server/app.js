@@ -198,16 +198,29 @@ app.get('/userData/mosttransactions/:userId', (req, res) => {
 });
 
 app.get('/userData/totaltransactions/:username', (req, res) => {
-  console.log('reqparams: ', req.params)
+
   var username = req.params.username;
-  db.userAnalytics.getAllUserAmountsSpent(username, (err, amountList) => {
+  db.userAnalytics.getAllUserAmountsSpent(username, (err, payList, payeeList) => {
     if (err) {
       console.log(err.message);
       res.status(503).end();
       return;
     }
-    console.log('list of amounts: ', amountList);
-    res.status(200).send(amountList);
+    var allPay = {payList: payList, payeeList: payeeList}
+    res.status(200).send(allPay);
+  })
+})
+
+app.get('/userData/totalwordcount/:username', (req, res) => {
+
+  var username = req.params.username;
+  db.userAnalytics.getAllUserNotes(username, (err, noteList) => {
+    if (err) {
+      console.log(err.message)
+      res.status(503).end();
+      return;
+    }
+    res.status(200).send(noteList);
   })
 })
 

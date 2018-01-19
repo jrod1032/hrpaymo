@@ -16,8 +16,8 @@ const displayNames = ({ name, cx, cy, midAngle, innerRadius, outerRadius, percen
   const x  = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy  + radius * Math.sin(-midAngle * RADIAN);
   return (
-        <text x={x} y={y} fill="black" textAnchor={x > cx ? 'start' : 'end'}  dominantBaseline="central">
-      {name}
+        <text x={x} y={y} fill="black" textAnchor={x > cx ? 'middle' : 'middle'}  dominantBaseline="central">
+      {`${name}: ${(percent * 100).toFixed(0)}%`}
     </text>
     )
 }
@@ -35,6 +35,7 @@ class SimplePieChart extends React.Component {
     axios.get(`/userData/mosttransactions/${this.props.userId}`, { params: {userId: this.props.userId}})
     .then( ({data}) => {
       console.log('transactiondata: ', data)
+      var amountOfTransactions = data.length;
       var counter = data.reduce(function(allNames, name) {
         if (name.username in allNames) {
           allNames[name.username]++;
@@ -53,7 +54,8 @@ class SimplePieChart extends React.Component {
       }
 
       this.setState({
-        transactions: myTransactionData
+        transactions: myTransactionData,
+        amountOfTransactions: amountOfTransactions
       });
     })
     .catch( (err) => {
@@ -62,16 +64,19 @@ class SimplePieChart extends React.Component {
   }
   
   render () {
+    console.log('pie rendering')
     return (
       <div>
-      <div>Breakdown of Transaction Amounts</div>
+      &nbsp;&nbsp;
+      <h3>Users You Have Paid The Most</h3>
+      <h5>{`Total Amount of Transactions: ${this.state.amountOfTransactions}`}</h5>
       <PieChart width={800} height={400} onMouseEnter={this.onPieEnter}>
         <Pie
           data={this.state.transactions || data} 
           cx={300} 
-          cy={200} 
+          cy={170} 
           labelLine={false}
-          outerRadius={80} 
+          outerRadius={160} 
           fill="#8884d8"
           label={displayNames}
         >

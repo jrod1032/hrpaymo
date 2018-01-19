@@ -9,6 +9,8 @@ import axios from 'axios';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
+
+
 // ---------- Componenets ---------- //
 import LoggedOutHome from './components/LoggedOutHome.jsx';
 import Home from './components/Home.jsx';
@@ -17,6 +19,8 @@ import SignUp from './components/SignUp.jsx';
 import Profile from './components/Profile.jsx';
 import Navbar from './components/Navbar.jsx';
 import Chat from './components/Chat.jsx';
+import DataAnalytics from './components/DataAnalytics.jsx'
+
 // ---------- Helper ---------- //
 import feedManipulation from './feedManipulation.js'
 
@@ -207,6 +211,19 @@ class App extends React.Component {
       );
     };
 
+    const UserAnalytics = (props) => {
+      console.log('rendering useranalytics')
+      return (
+        <DataAnalytics
+          isLoggedIn={this.state.isLoggedIn} 
+          logUserOut={this.logUserOut.bind(this)}        
+          userInfo={this.state.userInfo}
+          {...props}
+          />
+        )
+    }
+
+
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <BrowserRouter>
@@ -223,6 +240,10 @@ class App extends React.Component {
             <Route 
               exact path="/login" 
               render={routeProps => <Login {...routeProps} logUserIn={this.logUserIn.bind(this)} />} 
+            />
+            <Route
+            exact path="/userAnalytics"
+            render={UserAnalytics}
             />
             <Route 
               path="/:username"

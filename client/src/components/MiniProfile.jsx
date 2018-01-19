@@ -4,6 +4,7 @@ import Divider from 'material-ui/Divider';
 import Paper from 'material-ui/Paper';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 
+
 const style = {
   card: {
     position: 'relative',
@@ -30,6 +31,7 @@ class MiniProfile extends React.Component {
 
   render() {
     return (
+      <div>
       <Paper className='feed-container'>
         <Card>
           <CardHeader
@@ -56,6 +58,7 @@ class MiniProfile extends React.Component {
           </CardText>
         </Card>
       </Paper>
+      </div>
     );
   }
 }

@@ -43,18 +43,20 @@ class UserBarChart extends React.Component {
     }
   }
 
-  getBarData () {
-    console.log('getdataname?', this.props.userInfo.username);
+  componentDidMount () {
     axios.get(`userData/totaltransactions/${this.props.userInfo.username}`, 
       {params: {username: this.state.username}})
     .then ( ({data}) => {
-      console.log('all amounts: ', data)
-      var total = data.reduce( (accumulator, amountObj) => {
+
+      var payTotal = data.payList.reduce( (accumulator, amountObj) => {
         return accumulator + parseFloat(amountObj.amount);
       }, 0)
-      console.log('amount', total)
+      var payeeTotal = data.payeeList.reduce( (accumulator, amountObj) => {
+        return accumulator + parseFloat(amountObj.amount);
+      }, 0)
+
       this.setState({
-        chart: [{name: 'Jarrod', spent: -total, paid: 20}]
+        chart: [{Name: 'Jarrod', Spent: payTotal, Earned: payeeTotal}]
       })
 
     })
@@ -84,13 +86,16 @@ class UserBarChart extends React.Component {
     console.log('comparing user: ', userToCompare);
     axios.get(`userData/totaltransactions/${userToCompare}`, {params: {userId: this.props.userId}})
     .then ( ({data}) => {
-      var total = data.reduce( (accumulator, amountObj) => {
+      var payTotal = data.payList.reduce( (accumulator, amountObj) => {
+        return accumulator + parseFloat(amountObj.amount);
+      }, 0)
+      var payeeTotal = data.payeeList.reduce( (accumulator, amountObj) => {
         return accumulator + parseFloat(amountObj.amount);
       }, 0)
 
       // var newChart = this.state.chart;
       // newChart.push({name: userToCompare, spent: -total, paid: 50})
-      var thisChart = {name: userToCompare, spent: -total, paid: 50};
+      var thisChart = {Name: userToCompare, Spent: payTotal, Earned: payeeTotal};
       console.log('new chart: ', thisChart)
       this.setState({
         chart: [thisChart]
@@ -100,34 +105,37 @@ class UserBarChart extends React.Component {
   }
 
   render () {
-    console.log('state chart: ', this.state.chart)
     return (
-      <div className="form-box payment-username">
-        <AutoComplete
-          hintText="Compare with a Friend"
-          floatingLabelText="Username:"
-          style={style.input}
-          name='payeeUsername'
-          filter={AutoComplete.caseInsensitiveFilter}
-          dataSource={this.state.usernames ? this.state.usernames : []}
-          maxSearchResults={7}
-          searchText={this.state.payeeUsername}
-          onUpdateInput = {this.onDropdownInput.bind(this)}
-        />
-        <button className='btn' onClick={this.getBarData.bind(this)}>Render My Data</button>
-        <button className='btn' onClick={this.searchUserStats.bind(this)}>Get Info</button>
-        <BarChart width={600} height={300} data={this.state.chart}
-              margin={{top: 5, right: 30, left: 20, bottom: 5}}>
-           <XAxis dataKey="name"/>
-           <YAxis/>
-           <CartesianGrid strokeDasharray="3 3"/>
-           <Tooltip/>
-           <Legend />
-           <ReferenceLine y={0} stroke='#000'/>
-           <Bar dataKey="paid" fill="#8884d8" />
-           <Bar dataKey="spent" fill="#82ca9d" />
-        </BarChart>
-      </div>      
+      <div className="form-box">
+        <div className="payment-username home-rightColumn">
+          <span className="form">Payment Statistics</span>
+          <AutoComplete
+            hintText="Type Username: "
+            floatingLabelText="Find a Friend's Pay Stats"
+            style={style.input}
+            name='payeeUsername'
+            filter={AutoComplete.caseInsensitiveFilter}
+            dataSource={this.props.usernames ? this.props.usernames : []}
+            maxSearchResults={7}
+            searchText={this.state.payeeUsername}
+            onUpdateInput = {this.onDropdownInput.bind(this)}
+          />
+          <button className='btn' onClick={this.searchUserStats.bind(this)}>Search Friend</button>
+        </div>      
+        <div>
+          <BarChart width={600} height={300} data={this.state.chart}
+                margin={{top: 5, right: 30, left: 20, bottom: 5}}>
+             <XAxis dataKey="Name"/>
+             <YAxis 
+               label={{value: 'Dollars', angle: -90, position: 'insideLeft'}}/>
+             <CartesianGrid strokeDasharray="3 3"/>
+             <Tooltip/>
+             <Legend verticalAlign="bottom" height={36}/>/>
+             <Bar dataKey="Earned" fill="#8884d8" />
+             <Bar dataKey="Spent" fill="#82ca9d" />
+          </BarChart>
+        </div>
+      </div>
     );
   }
 
