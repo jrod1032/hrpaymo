@@ -2,7 +2,7 @@ const server = require('../server/app');
 let chai = require('chai');
 var expect = chai.expect;
 let openSocket = require('socket.io-client');
-var port = process.env.PORT || 3000;
+var port = 4444;
 
 
 let onlineUsers = [];
@@ -14,7 +14,7 @@ describe('Chat service', function() {
   
   beforeEach(function() {
     onlineUsers = [];
-    client = openSocket('http://127.0.0.1:3000', {'forceNew': true});
+    client = openSocket('http://127.0.0.1:4444', {'forceNew': true});
   });
 
   after(function(done) {
