@@ -83,7 +83,6 @@ class UserBarChart extends React.Component {
 
   searchUserStats () {
     var userToCompare = this.state.compareUser;
-    console.log('comparing user: ', userToCompare);
     axios.get(`userData/totaltransactions/${userToCompare}`, {params: {userId: this.props.userId}})
     .then ( ({data}) => {
       var payTotal = data.payList.reduce( (accumulator, amountObj) => {
@@ -96,7 +95,6 @@ class UserBarChart extends React.Component {
       // var newChart = this.state.chart;
       // newChart.push({name: userToCompare, spent: -total, paid: 50})
       var thisChart = {Name: userToCompare, Spent: payTotal, Earned: payeeTotal};
-      console.log('new chart: ', thisChart)
       this.setState({
         chart: [thisChart]
       })

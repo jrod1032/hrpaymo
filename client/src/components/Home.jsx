@@ -4,10 +4,6 @@ import Payment from './Payment.jsx';
 import FeedContainer from './FeedContainer.jsx';
 import MiniProfile from './MiniProfile.jsx';
 import VerifyPhone from './VerifyPhone.jsx';
-import SimplePieChart from './userPieChart.jsx'
-import SimplePieChart from './userPieChart.jsx';
-import UserBarChart from './userBarChart.jsx';
-import { withRouter, Link } from "react-router-dom";
 
 
 class Home extends React.Component {
