@@ -3,7 +3,11 @@ import Navbar from './Navbar.jsx';
 import Payment from './Payment.jsx';
 import FeedContainer from './FeedContainer.jsx';
 import MiniProfile from './MiniProfile.jsx';
+<<<<<<< HEAD
 import VerifyPhone from './VerifyPhone.jsx';
+=======
+import { withRouter, Link } from "react-router-dom";
+>>>>>>> Implement WordCount Chart, refactor components
 
 class Home extends React.Component {
   constructor (props) {
@@ -51,8 +55,6 @@ class Home extends React.Component {
             />
           </div>
           <div className="home-rightColumn">
-            <SimplePieChart userId={this.props.userInfo.userId}/>
-            <UserBarChart userInfo={this.props.userInfo}/>
             <MiniProfile 
               balance={this.props.balance}
               userInfo={this.props.userInfo}
