@@ -8,6 +8,7 @@ const helpers = require('./helpers.js');
 var path = require('path');
 const _ = require('underscore');
 const setSocketListeners = require('./sockets');
+const sms = require('./sms');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -16,6 +17,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/../client/dist'));
+
+app.use('/sms', sms);
 
 app.post('/login', (req, res) => {
   var {username, password} = req.body;
@@ -62,6 +65,7 @@ app.get('/profile', (req, res) => {
         var ui = row[0];
         var userInfo = {
           userId: ui.id,
+          verified: ui.verified,
           username: _.unescape(ui.username),
           displayName: _.unescape(ui.first_name + ' ' + ui.last_name),
           createdAt: _.unescape(ui.created_at),

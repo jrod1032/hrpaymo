@@ -96,5 +96,26 @@ module.exports = {
       .where({username: username})
       .select('id', 'username', 'first_name', 'last_name', 'created_at', 'avatar_url')
       .limit(1)
+  },
+
+  getUserPhoneNumber: (userId) => {
+    return pg.table('users')
+      .where({ id: userId })
+      .select('phone', 'verified')
+      .then(row => row[0])
+  },
+
+  updatePhoneNumber: (phoneNumber, userId) => {
+    return pg.table('users')
+      .where('id', userId)
+      .returning(['phone', 'id', 'verified'])
+      .update({ phone: phoneNumber })
+  },
+
+  verifyUserPhone: (userId) => {
+    return pg.table('users')
+      .where('id', userId)
+      .returning(['id', 'verified'])
+      .update({ verified: true })
   }
 };
