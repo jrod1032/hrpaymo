@@ -5,6 +5,7 @@ import FeedContainer from './FeedContainer.jsx';
 import MiniProfile from './MiniProfile.jsx';
 import VerifyPhone from './VerifyPhone.jsx';
 
+
 class Home extends React.Component {
   constructor (props) {
     super(props);

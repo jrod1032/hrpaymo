@@ -185,6 +185,45 @@ app.get('/publicprofile', (req, res) => {
     }) 
 });
 
+app.get('/userData/mosttransactions/:userId', (req, res) => {
+  var userId = req.params.userId
+  db.userAnalytics.getAllUserTransactions(userId, (err, transactionList) => {
+    if (err) {
+      console.log(err.message);
+      res.status(503).end();
+      return;
+    }
+    res.status(200).send(transactionList)
+  }) 
+});
+
+app.get('/userData/totaltransactions/:username', (req, res) => {
+
+  var username = req.params.username;
+  db.userAnalytics.getAllUserAmountsSpent(username, (err, payList, payeeList) => {
+    if (err) {
+      console.log(err.message);
+      res.status(503).end();
+      return;
+    }
+    var allPay = {payList: payList, payeeList: payeeList}
+    res.status(200).send(allPay);
+  })
+})
+
+app.get('/userData/totalwordcount/:username', (req, res) => {
+
+  var username = req.params.username;
+  db.userAnalytics.getAllUserNotes(username, (err, noteList) => {
+    if (err) {
+      console.log(err.message)
+      res.status(503).end();
+      return;
+    }
+    res.status(200).send(noteList);
+  })
+})
+
 // FEED ENDPOINTS
 
 const FEED_DEFAULT_LENGTH = 5;
