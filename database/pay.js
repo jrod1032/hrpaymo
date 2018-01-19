@@ -101,6 +101,22 @@ const updatePayeeBalance = function(paymentTransaction, paymentDataFromServer, l
   .where({ user_id: localPaymentInfo.payeeUserId})
 }
 
+const getTransactionInfo = (transactionId) => {
+  let query = `
+    SELECT transactions.amount amount, transactions.created_at,
+    (SELECT username payer_name FROM users WHERE users.id = users_transactions.payer_id),
+    (SELECT phone payer_phone FROM users WHERE users.id = users_transactions.payer_id),
+    (SELECT verified payer_verified FROM users WHERE users.id = users_transactions.payer_id),
+    (SELECT username payee_name FROM users WHERE users.id = users_transactions.payee_id),
+    (SELECT phone payee_phone FROM users WHERE users.id = users_transactions.payee_id),
+    (SELECT verified payee_verified FROM users WHERE users.id = users_transactions.payee_id)
+    FROM transactions, users_transactions WHERE transactions.txn_id = ${transactionId}
+    AND transactions.txn_id = users_transactions.txn_id
+  `;
+  return pg.raw(query).then(res => res.rows[0]);
+}
+
 module.exports = {
-  pay: pay
+  pay: pay,
+  getTransactionInfo: getTransactionInfo
 }

@@ -15,6 +15,8 @@
     "heroku-rebuild-db": "heroku pg:reset postgresql-tapered-30799 --app paymohnr --confirm paymohnr && psql postgres://atdwgvjaxdrygk:f668459b33ef454677556334cc179905902763b23503ad1bab8c2a85fbb4abc0@ec2-54-83-59-144.compute-1.amazonaws.com:5432/dd8gqeqmdklrbs -f schema.sql",
     "react-dev": "webpack -d --watch",
     "start-dev": "nodemon server/index.js",
+    "enable-sms": "heroku config:set ENABLE_SMS=true",
+    "disable-sms": "heroku config:set ENABLE_SMS=false",
     "start": "node server/index.js",
     "create-db": "psql -d postgres -a -f schema.sql",
     "test": "mocha test --exit && jest ./client"
