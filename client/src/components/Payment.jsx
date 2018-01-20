@@ -68,20 +68,19 @@ class Payment extends React.Component {
 
   getEmojiOnNoteChange (input) {
     var commentArray = input.split(' ');
-      var mostRecentWord = commentArray[commentArray.length - 1]
-      if (mostRecentWord.length > 2) {
-        axios.get('/emoji', {params: {note: mostRecentWord}})
-          .then( ({data}) => {
-            var arrayOfEmojis = data.rows.map( (reactionObj) => {
-              return reactionObj.r_emoji;
-            })
-            this.setState({
-              emojis: arrayOfEmojis,
-            })
+    var mostRecentWord = commentArray[commentArray.length - 1]
+    if (mostRecentWord.length > 2) {
+      axios.get('/emoji', {params: {note: mostRecentWord}})
+        .then( ({data}) => {
+          var arrayOfEmojis = data.rows.map( (reactionObj) => {
+            return reactionObj.r_emoji;
           })
-          .catch(err => console.log(err))    
-      }
-    // })
+          this.setState({
+            emojis: arrayOfEmojis,
+          })
+        })
+        .catch(err => console.log(err))    
+    }
   }
 
   onDropdownInput(searchText) {
@@ -133,9 +132,7 @@ class Payment extends React.Component {
 
   inputEmojiIntoTextField (emoji) {
     var myEmoji = emoji.currentTarget.getAttribute('name')
-    console.log('myemoji: ', myEmoji)
     var oldText = this.state.comment.split(' ');
-    console.log('oldText: ', oldText)
     oldText[oldText.length- 1] = myEmoji
     this.setState({
       comment: oldText.join(' '),
@@ -175,23 +172,17 @@ class Payment extends React.Component {
           <br />
           </div>
           <div className="form-box payment-note">
-
-                <TextField
-                  style={style.input}
-                  name="comment"
-                  value={this.state.comment}
-                  hintText="What's it for?"
-                  floatingLabelText="Leave a comment"
-                  onChange={this.handleInputChanges.bind(this)}
-
-                /><br />
-
-                  <Menu disableAutoFocus={true} onItemClick={this.inputEmojiIntoTextField.bind(this)}>
-                  {this.state.emojis.map ((emoji) => <MenuItem primaryText={emoji} name={emoji} value={emoji}/>
-                    
-                  )}
-                  </Menu> 
-      
+            <TextField
+              style={style.input}
+              name="comment"
+              value={this.state.comment}
+              hintText="What's it for?"
+              floatingLabelText="Leave a comment"
+              onChange={this.handleInputChanges.bind(this)}
+            /><br />
+              <Menu disableAutoFocus={true} onItemClick={this.inputEmojiIntoTextField.bind(this)}>
+              {this.state.emojis.map ((emoji) => <MenuItem primaryText={emoji} name={emoji} value={emoji}/>)}
+              </Menu> 
           <br />
           </div>
         </div>

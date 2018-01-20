@@ -49,14 +49,16 @@ class RadialEmojiChart extends React.Component {
   }
 
   formatRadialData(data) {
-
     //convert data to an array of all emojis used
     var arrayOfWords = data.rows
     .map( (wordObj) => {
-      return wordObj.note.toLowerCase().split(',');
+      if (wordObj.note) {
+        return wordObj.note.toLowerCase().split(' ');
+      } else {
+        return 'empty'
+      }
     })
     .reduce( (a, b) => a.concat(b))
-
     //count emoji instances
     var countedWords = arrayOfWords.reduce( (allWords, word) => {
       if (word in allWords) {
@@ -69,11 +71,25 @@ class RadialEmojiChart extends React.Component {
 
     //convert emoji count to an array of emoji objects
     var radialData = [];
+
+    var cleanUpWord = function(word) {
+      var truth = false
+      var letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+      letters.forEach( (letter) => {
+        if (word.startsWith(letter)) {
+          truth = true;
+        }
+      })
+      return truth;
+    }
+    
     for (var word in countedWords)  {
-          var wordCount = {};
-          wordCount.word = word;
-          wordCount.amount = countedWords[word];
-          radialData.push(wordCount);    
+      if (!cleanUpWord(word)) {
+        var wordCount = {};
+        wordCount.word = word;
+        wordCount.amount = countedWords[word];
+        radialData.push(wordCount);    
+      }
     };
 
     //sort data
