@@ -1,12 +1,11 @@
 const pg = require('./index.js').pg;
-
 const pay = function(paymentDataFromServer) {
   let localPaymentInfo = {
     payerBalance: undefined,
     payeeBalance: undefined,
     payeeUserId: undefined
   }
-
+  let hackyWorkaroundTXID; //for message notifications, I need the transaction ID to be returned by this function, as well as whatever the authors needed
   return new Promise ((res, rej) => {
     return pg.transaction(paymentTransaction => {
       return Promise.all([
@@ -25,6 +24,7 @@ const pay = function(paymentDataFromServer) {
       })
       // add to the transactions table with txn_id
       .then(txn_id => {
+        hackyWorkaroundTXID = txn_id; //see note above
         return Promise.all([
           addTransaction(paymentTransaction, txn_id, paymentDataFromServer),
           updatePayerBalance(paymentTransaction, paymentDataFromServer, localPaymentInfo),
@@ -35,7 +35,8 @@ const pay = function(paymentDataFromServer) {
       .then(paymentTransaction.commit)
       // return the payer's balance
       .then(() => {
-        res(localPaymentInfo.payerBalance);
+        // res(localPaymentInfo.payerBalance); //original, works, but will not allow notifications
+        res({ balance: localPaymentInfo.payerBalance, transactionId: hackyWorkaroundTXID });
       })
       .catch(err => {
         paymentTransaction.rollback;
@@ -101,6 +102,22 @@ const updatePayeeBalance = function(paymentTransaction, paymentDataFromServer, l
   .where({ user_id: localPaymentInfo.payeeUserId})
 }
 
+const getTransactionInfo = (transactionId) => {
+  let query = `
+    SELECT transactions.amount amount, transactions.created_at,
+    (SELECT username payer_name FROM users WHERE users.id = users_transactions.payer_id),
+    (SELECT phone payer_phone FROM users WHERE users.id = users_transactions.payer_id),
+    (SELECT verified payer_verified FROM users WHERE users.id = users_transactions.payer_id),
+    (SELECT username payee_name FROM users WHERE users.id = users_transactions.payee_id),
+    (SELECT phone payee_phone FROM users WHERE users.id = users_transactions.payee_id),
+    (SELECT verified payee_verified FROM users WHERE users.id = users_transactions.payee_id)
+    FROM transactions, users_transactions WHERE transactions.txn_id = ${transactionId}
+    AND transactions.txn_id = users_transactions.txn_id
+  `;
+  return pg.raw(query).then(res => res.rows[0]);
+}
+
 module.exports = {
-  pay: pay
+  pay: pay,
+  getTransactionInfo: getTransactionInfo
 }

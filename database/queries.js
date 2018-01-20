@@ -12,6 +12,7 @@ module.exports = {
   profile: profile,
   getPasswordAtUsername: login.getPasswordAtUsername,
   payment: payment.pay,
+  getTransactionInfo: payment.getTransactionInfo,
   getUsernames: usernames.getUsernames,
   globalFeed: feed.globalFeed,
   myFeed: feed.myFeed,
