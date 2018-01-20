@@ -60,21 +60,16 @@ module.exports = {
   },
 
   getEmoji: (string, callback) => {
-    var words = string.split(' ');
-    console.log('words: ', words)
-    words.forEach( (word) => {
-      var query = `select r_emoji from (select reactions.emoji as r_emoji, to_tsvector(reactions.description) as document from reactions) as r_search WHERE r_search.document @@ to_tsquery('${word}:*');`
+      var query = `select r_emoji from (select reactions.emoji as r_emoji, to_tsvector(reactions.description) as document from reactions) as r_search WHERE r_search.document @@ to_tsquery('${string}:*');`
 
       pg.raw(query)
         .then( (emojiList) => {
-          console.log('emojis! ', emojiList)
+          console.log('emojis! ', emojiList.rows)
           callback(null, emojiList)
         })
         .catch( (err) => {
           callback(err, null);
         })
-
-    })
   }
 
 };

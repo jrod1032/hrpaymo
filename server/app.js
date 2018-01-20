@@ -229,7 +229,6 @@ app.get('/userData/totalwordcount/:username', (req, res) => {
 })
 
 app.get('/emoji/' , (req, res) => {
-  console.log(req.query.note)
   var note = req.query.note;
   db.userAnalytics.getEmoji(note, (err, emojiList) => {
     if (err) {
