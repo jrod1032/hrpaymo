@@ -47,12 +47,13 @@ module.exports = {
   },
 
   getAllUserNotes: (username, callback) => {
-    var subquery = pg.table('users').where('users.username', '=' ,`${username}`).select('users.id');  
-    pg.table('transactions')
-      .join('users_transactions', 'transactions.txn_id', '=', 'users_transactions.txn_id')
-      .where('users_transactions.payer_id', 'in', subquery)
-      .select('transactions.note')
-
+    // var subquery = pg.table('users').where('users.username', '=' ,`${username}`).select('users.id');  
+    // pg.table('transactions')
+    //   .join('users_transactions', 'transactions.txn_id', '=', 'users_transactions.txn_id')
+    //   .where('users_transactions.payer_id', 'in', subquery)
+    //   .select('transactions.note')
+    var query = `SELECT transactions.note from transactions inner join users_transactions on transactions.txn_id = users_transactions.txn_id WHERE users_transactions.payer_id = (select users.id from users where users.username = 'jarrod');`
+      pg.raw(query)
       .then( (result) => {
         console.log('notes:', result);
         callback(null, result)
@@ -62,19 +63,22 @@ module.exports = {
       })
   },
 
-  getEmoji: (query, callback) => {
-    var subquery = `SELECT r_emoji FROM (SELECT reactions.emoji AS r_emoji, 
-    to_tsvector(reactions.description) AS document FROM reactions) AS r_search 
-    WHERE r_search.document @@ to_tsquery('${query}:*');`
+  getEmoji: (string, callback) => {
+    var words = string.split(' ');
+    console.log('words: ', words)
+    words.forEach( (word) => {
+      var query = `select r_emoji from (select reactions.emoji as r_emoji, to_tsvector(reactions.description) as document from reactions) as r_search WHERE r_search.document @@ to_tsquery('${word}:*');`
 
-    pg.raw(query)
-      .then( (emojiList) => {
-        console.log('emojis! ', emojiList)
-        callback(null, emojiList)
-      })
-      .catch( (err) => {
-        callback(err, null);
-      })
+      pg.raw(query)
+        .then( (emojiList) => {
+          console.log('emojis! ', emojiList)
+          callback(null, emojiList)
+        })
+        .catch( (err) => {
+          callback(err, null);
+        })
+
+    })
   }
 
 };

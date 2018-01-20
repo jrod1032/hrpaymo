@@ -49,9 +49,10 @@ class RadialEmojiChart extends React.Component {
   }
 
   formatRadialData(data) {
-    var arrayOfWords = data
+    console.log('data: ', data)
+    var arrayOfWords = data.rows
     .map( (wordObj) => {
-      return wordObj.note.toLowerCase().split(' ');
+      return wordObj.note.toLowerCase().split(',');
     })
     .reduce( (a, b) => a.concat(b))
 

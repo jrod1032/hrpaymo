@@ -33,7 +33,8 @@ class Payment extends React.Component {
       amount: '',
       note: '',
       paymentFail: false,
-      usernames: []
+      usernames: [],
+      emojis: []
     }
   }
 
@@ -54,6 +55,32 @@ class Payment extends React.Component {
     this.setState({
       [target.name] : target.value
     })
+  }
+
+  getEmojiOnNoteChange (searchText) {
+    var oldNote = this.state.note;
+    this.setState({
+      note : searchText
+    })
+    if (this.state.note.length > 2) {
+      console.log('fetching emojis...')
+      axios.get('/emoji', {params: {note: this.state.note}})
+        .then( ({data}) => {
+          var arrayOfEmojis = data.rows.map( (reactionObj) => {
+            return reactionObj.r_emoji;
+          })
+          console.log('emojis: ', arrayOfEmojis);
+          var oldText = this.state.note
+          var completeText = oldText + ' ' + arrayOfEmojis;
+          this.setState({
+            emojis: arrayOfEmojis
+          })
+          this.setState({
+            oldNote: oldNote
+          })
+        })
+        .catch(err => console.log(err))    
+    }
   }
 
   onDropdownInput(searchText) {
@@ -133,16 +160,18 @@ class Payment extends React.Component {
           <br />
           </div>
           <div className="form-box payment-note">
-            <TextField
-              style={style.input}
-              name='note'
-              value={this.state.note}
-              onChange = {this.handleInputChanges.bind(this)}
-              hintText="for"
-              floatingLabelText="Leave a comment"
-              fullWidth={true}
-              multiLine={true}
-            />
+                <AutoComplete
+                  hintText="For"
+                  floatingLabelText="Leave a comment"
+                  style={style.input}
+                  name='note'
+                  dataSource={this.state.emojis ? this.state.emojis : []}
+                  filter={AutoComplete.noFilter}
+                  maxSearchResults={3}
+                  searchText={this.state.note}
+                  onUpdateInput = {this.getEmojiOnNoteChange.bind(this)}
+                  // onNewRequest={(chosenRequest, index) => this.fillTextField(chosenRequest)}
+                />            
           <br />
           </div>
         </div>
