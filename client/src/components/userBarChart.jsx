@@ -62,17 +62,7 @@ class UserBarChart extends React.Component {
     })
     .catch( (err) => {
       console.log(err.message)
-    })
-
-    // axios('/usernames', { params: { userId: this.props.userInfo.userId }})
-    // .then(response => {
-    //   this.setState({
-    //     usernames: response.data.usernames
-    //   });
-    // })
-    // .catch(err => {
-    //   console.error(err);
-    // })    
+    })  
   }
 
   onDropdownInput(searchText) {

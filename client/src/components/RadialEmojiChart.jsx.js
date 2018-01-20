@@ -37,7 +37,6 @@ class RadialEmojiChart extends React.Component {
   }
 
   getRadialData (username) {
-    console.log(username)
     axios.get(`userData/totalwordcount/${username}`, 
       {params: {username: this.state.username}})
       .then( ({data}) => {
@@ -79,7 +78,7 @@ class RadialEmojiChart extends React.Component {
 
     //sort data
     radialData.sort( (a, b) =>  b.amount - a.amount)
-    console.log('radial data', radialData);
+
     //display top 5
     this.setState({
       data: radialData.slice(0, 6)
@@ -93,7 +92,6 @@ class RadialEmojiChart extends React.Component {
   }  
 
   searchUserStats() {
-    console.log('searching user')
     this.getRadialData(this.state.compareUser)
   }
 

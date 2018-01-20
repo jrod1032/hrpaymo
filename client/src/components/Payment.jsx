@@ -58,25 +58,17 @@ class Payment extends React.Component {
   }
 
   getEmojiOnNoteChange (searchText) {
-    var oldNote = this.state.note;
     this.setState({
       note : searchText
     })
-    if (this.state.note.length > 2) {
-      console.log('fetching emojis...')
-      axios.get('/emoji', {params: {note: this.state.note}})
+    if (searchText.length > 2) {
+      axios.get('/emoji', {params: {note: searchText}})
         .then( ({data}) => {
           var arrayOfEmojis = data.rows.map( (reactionObj) => {
             return reactionObj.r_emoji;
           })
-          console.log('emojis: ', arrayOfEmojis);
-          var oldText = this.state.note
-          var completeText = oldText + ' ' + arrayOfEmojis;
           this.setState({
             emojis: arrayOfEmojis
-          })
-          this.setState({
-            oldNote: oldNote
           })
         })
         .catch(err => console.log(err))    
@@ -170,7 +162,6 @@ class Payment extends React.Component {
                   maxSearchResults={3}
                   searchText={this.state.note}
                   onUpdateInput = {this.getEmojiOnNoteChange.bind(this)}
-                  // onNewRequest={(chosenRequest, index) => this.fillTextField(chosenRequest)}
                 />            
           <br />
           </div>
