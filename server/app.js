@@ -217,9 +217,9 @@ app.get('/userData/totaltransactions/:username', (req, res) => {
 
 app.get('/userData/totalwordcount/:username', (req, res) => {
 
-  var username = req.params.username;
-  console.log(username);
-  db.userAnalytics.getAllUserNotes(req.query.userId, (err, noteList) => {
+  var myUser = req.params.username;
+  console.log(myUser);
+  db.userAnalytics.getAllUserNotes(myUser, (err, noteList) => {
     if (err) {
       console.log(err.message)
       res.status(503).end();

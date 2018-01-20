@@ -37,6 +37,7 @@ class RadialEmojiChart extends React.Component {
   }
 
   getRadialData (username) {
+    console.log(username)
     axios.get(`userData/totalwordcount/${username}`, 
       {params: {username: this.state.username}})
       .then( ({data}) => {
@@ -49,13 +50,15 @@ class RadialEmojiChart extends React.Component {
   }
 
   formatRadialData(data) {
-    console.log('data: ', data)
+
+    //convert data to an array of all emojis used
     var arrayOfWords = data.rows
     .map( (wordObj) => {
       return wordObj.note.toLowerCase().split(',');
     })
     .reduce( (a, b) => a.concat(b))
 
+    //count emoji instances
     var countedWords = arrayOfWords.reduce( (allWords, word) => {
       if (word in allWords) {
         allWords[word]++;
@@ -65,16 +68,21 @@ class RadialEmojiChart extends React.Component {
       return allWords;
     }, {})
 
+    //convert emoji count to an array of emoji objects
     var radialData = [];
     for (var word in countedWords)  {
-      var wordCount = {};
-      wordCount.word = word;
-      wordCount.amount = countedWords[word];
-      radialData.push(wordCount);
+          var wordCount = {};
+          wordCount.word = word;
+          wordCount.amount = countedWords[word];
+          radialData.push(wordCount);    
     };
 
+    //sort data
+    radialData.sort( (a, b) =>  b.amount - a.amount)
+    console.log('radial data', radialData);
+    //display top 5
     this.setState({
-      data: radialData
+      data: radialData.slice(0, 6)
     })
   }
 
@@ -85,6 +93,7 @@ class RadialEmojiChart extends React.Component {
   }  
 
   searchUserStats() {
+    console.log('searching user')
     this.getRadialData(this.state.compareUser)
   }
 
@@ -101,7 +110,7 @@ class RadialEmojiChart extends React.Component {
             filter={AutoComplete.caseInsensitiveFilter}
             dataSource={this.props.usernames ? this.props.usernames : []}
             maxSearchResults={7}
-            searchText={this.state.payeeUsername}
+            searchText={this.state.compareUser}
             onUpdateInput = {this.onDropdownInput.bind(this)}
           />
           <button className='btn' onClick={this.searchUserStats.bind(this)}>Search Friend</button>

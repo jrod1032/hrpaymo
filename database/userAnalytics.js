@@ -52,7 +52,9 @@ module.exports = {
     //   .join('users_transactions', 'transactions.txn_id', '=', 'users_transactions.txn_id')
     //   .where('users_transactions.payer_id', 'in', subquery)
     //   .select('transactions.note')
-    var query = `SELECT transactions.note from transactions inner join users_transactions on transactions.txn_id = users_transactions.txn_id WHERE users_transactions.payer_id = (select users.id from users where users.username = 'jarrod');`
+    console.log('db user', username);
+    var subquery = `select users.id from users where users.username = '${username}'`
+    var query = `SELECT transactions.note from transactions inner join users_transactions on transactions.txn_id = users_transactions.txn_id WHERE users_transactions.payer_id = (${subquery});`
       pg.raw(query)
       .then( (result) => {
         console.log('notes:', result);
