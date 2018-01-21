@@ -56,7 +56,7 @@ class UserBarChart extends React.Component {
       }, 0)
 
       this.setState({
-        chart: [{Name: 'Jarrod', Spent: payTotal, Earned: payeeTotal}]
+        chart: [{Name: this.props.userInfo.username, Spent: payTotal, Earned: payeeTotal}]
       })
 
     })
@@ -96,7 +96,7 @@ class UserBarChart extends React.Component {
     return (
       <div className="form-box">
         <div className="payment-username home-rightColumn">
-          <span className="form">Payment Statistics</span>
+          <h3 className="form">Payment Statistics</h3>
           <AutoComplete
             hintText="Type Username: "
             floatingLabelText="Find a Friend's Pay Stats"
