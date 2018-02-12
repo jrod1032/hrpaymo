@@ -19,6 +19,7 @@ import SignUp from './components/SignUp.jsx';
 import Profile from './components/Profile.jsx';
 import Navbar from './components/Navbar.jsx';
 import Chat from './components/Chat.jsx';
+import DataAnalytics from './components/DataAnalytics.jsx'
 
 // ---------- Helper ---------- //
 import feedManipulation from './feedManipulation.js'

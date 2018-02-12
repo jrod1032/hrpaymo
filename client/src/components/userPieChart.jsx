@@ -34,7 +34,6 @@ class SimplePieChart extends React.Component {
   componentDidMount () {
     axios.get(`/userData/mosttransactions/${this.props.userId}`, { params: {userId: this.props.userId}})
     .then( ({data}) => {
-      console.log('transactiondata: ', data)
       var amountOfTransactions = data.length;
       var counter = data.reduce(function(allNames, name) {
         if (name.username in allNames) {
@@ -44,7 +43,6 @@ class SimplePieChart extends React.Component {
         }
         return allNames
       }, {})
-
       var myTransactionData = [];
       for (name in counter) {
         var thisName = {};

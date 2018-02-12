@@ -56,23 +56,13 @@ class UserBarChart extends React.Component {
       }, 0)
 
       this.setState({
-        chart: [{Name: 'Jarrod', Spent: payTotal, Earned: payeeTotal}]
+        chart: [{Name: this.props.userInfo.username, Spent: payTotal, Earned: payeeTotal}]
       })
 
     })
     .catch( (err) => {
       console.log(err.message)
-    })
-
-    axios('/usernames', { params: { userId: this.props.userInfo.userId }})
-    .then(response => {
-      this.setState({
-        usernames: response.data.usernames
-      });
-    })
-    .catch(err => {
-      console.error(err);
-    })    
+    })  
   }
 
   onDropdownInput(searchText) {
@@ -83,7 +73,6 @@ class UserBarChart extends React.Component {
 
   searchUserStats () {
     var userToCompare = this.state.compareUser;
-    console.log('comparing user: ', userToCompare);
     axios.get(`userData/totaltransactions/${userToCompare}`, {params: {userId: this.props.userId}})
     .then ( ({data}) => {
       var payTotal = data.payList.reduce( (accumulator, amountObj) => {
@@ -96,7 +85,7 @@ class UserBarChart extends React.Component {
       // var newChart = this.state.chart;
       // newChart.push({name: userToCompare, spent: -total, paid: 50})
       var thisChart = {Name: userToCompare, Spent: payTotal, Earned: payeeTotal};
-      console.log('new chart: ', thisChart)
+
       this.setState({
         chart: [thisChart]
       })
@@ -108,7 +97,7 @@ class UserBarChart extends React.Component {
     return (
       <div className="form-box">
         <div className="payment-username home-rightColumn">
-          <span className="form">Payment Statistics</span>
+          <h3 className="form">Payment Statistics</h3>
           <AutoComplete
             hintText="Type Username: "
             floatingLabelText="Find a Friend's Pay Stats"

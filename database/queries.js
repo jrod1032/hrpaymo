@@ -5,12 +5,14 @@ const profile = require('../database/profile.js');
 const payment = require('../database/pay.js');
 const usernames = require('../database/usernames.js');
 const messages = require('../database/messages');
+const userAnalytics = require('../database/userAnalytics.js')
 
 module.exports = {
   signup: signup,
   profile: profile,
   getPasswordAtUsername: login.getPasswordAtUsername,
   payment: payment.pay,
+  getTransactionInfo: payment.getTransactionInfo,
   getUsernames: usernames.getUsernames,
   globalFeed: feed.globalFeed,
   myFeed: feed.myFeed,
@@ -22,6 +24,8 @@ module.exports = {
   getAllMessagesBetweenTwoUsers: messages.getAllMessagesBetweenTwoUsers,
   getUserPhoneNumber: profile.getUserPhoneNumber,
   updatePhoneNumber: profile.updatePhoneNumber,
-  verifyUserPhone: profile.verifyUserPhone
+  verifyUserPhone: profile.verifyUserPhone,
+  getAllMessagesBetweenTwoUsers: messages.getAllMessagesBetweenTwoUsers,
+  userAnalytics: userAnalytics
 }
 

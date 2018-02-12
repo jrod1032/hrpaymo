@@ -9,6 +9,7 @@ import VerifyPhone from './VerifyPhone.jsx';
 import { withRouter, Link } from "react-router-dom";
 >>>>>>> Implement WordCount Chart, refactor components
 
+
 class Home extends React.Component {
   constructor (props) {
     super(props);

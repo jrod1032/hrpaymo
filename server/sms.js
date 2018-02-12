@@ -42,32 +42,6 @@ const verify = (req, res) => {
   }
 };
 
-// const request = (req, res) => {
-//   console.log('verifying phone number', req.query.p, req.query.uid)
-//   let phoneDetails = getPhoneNumberParts(req.query.p);
-//   if (!phoneDetails) { res.status(500).json({ success: false })} //error if phone number is invalid length
-//   lib.verify.requestPhoneVerification(phoneDetails.phone_number, phoneDetails.country_code)
-//     .then(response => {
-//       console.log('Success register phone API call: ', response);
-
-//       db.updatePhoneNumber(req.query.p, req.query.uid)
-//         .then((row) => {
-
-
-//           console.log('successfully updated database for user', row)
-//           res.status(200).json({ success: true });
-//         })
-//         .catch(err => {
-//           console.log('could not update user in db', err)
-//           res.status(500).json({ success: false });
-//         })
-//     })
-//     .catch(err => {
-//       console.log('error creating phone reg request', err);
-//       res.status(500).json({ success: false });
-//     })
-// };
-
 const request = (req, res) => {
   console.log('verifying phone number', req.query.p, req.query.uid)
   let phoneDetails = getPhoneNumberParts(req.query.p);

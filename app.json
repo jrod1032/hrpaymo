@@ -1,10 +1,7 @@
 {
   "name": "hrpaymo",
-  "description": "",
+  "description": "Pay your friends!",
   "scripts": {
-  },
-  "env": {
-    "DATABASE_URL": "postgres://atdwgvjaxdrygk:f668459b33ef454677556334cc179905902763b23503ad1bab8c2a85fbb4abc0@ec2-54-83-59-144.compute-1.amazonaws.com:5432/dd8gqeqmdklrbs"
   },
   "formation": {
     "web": {
